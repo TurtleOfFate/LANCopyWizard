@@ -6,24 +6,33 @@ LANCopyWizard::LANCopyWizard(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
-	MainWindow myqapp;
-	QHBoxLayout* hlayout = new QHBoxLayout;
-	QLabel* label = new QLabel("hello world!");
-	QPushButton* exitButt = new QPushButton("Exit");
-	QPushButton* textbut = new QPushButton("show text");
-	QWidget* mainWindow = new QWidget;
+	 myqapp = new MainWindow;
+	 hlayout = new QHBoxLayout;
+	 label = new QLabel("hello world!");
+	 exitButt = new QPushButton("Exit");
+	 textbut = new QPushButton("show text");
+	 mainWindow = new QWidget;
 	QObject::connect(exitButt, &QPushButton::clicked, &QApplication::quit);
 
 
 	bool bok = true;
-	bok = QObject::connect(textbut, SIGNAL(clicked()), &myqapp, SLOT(setupUi()));
+	bok = QObject::connect(textbut, &QPushButton::clicked, myqapp, &MainWindow::setupUi);
 	Q_ASSERT(bok);
 	hlayout->addWidget(label);
 	hlayout->addWidget(exitButt);
 	hlayout->addWidget(textbut);
 	mainWindow->setLayout(hlayout);
 	mainWindow->show();
+
+
 }
 
 LANCopyWizard::~LANCopyWizard()
-{}
+{
+	delete myqapp;
+	delete hlayout;
+	delete label;
+	delete exitButt;
+	delete textbut;
+	delete mainWindow;
+}
