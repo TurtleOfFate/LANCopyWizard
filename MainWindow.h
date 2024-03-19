@@ -9,5 +9,7 @@ signals:
 
 public slots:
 	void setupUi();
+	void copySlot();
+
 };
 
