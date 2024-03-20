@@ -1,8 +1,13 @@
 #pragma once
 #include <qobject.h>
-class MainWindow :public QObject
+#include <qwidget.h>
+
+class MainWindow  : public QWidget
 {
 	Q_OBJECT
+public:
+	MainWindow(QWidget* parent = nullptr);
+	~MainWindow();
 
 signals:
 	void sendMessage();
@@ -11,5 +16,8 @@ public slots:
 	void setupUi();
 	void copySlot();
 
+private:
+	
+	std::vector<QWidget> activeWidgets_;
 };
 
