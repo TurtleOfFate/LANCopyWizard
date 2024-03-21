@@ -16,16 +16,31 @@ public:
 	IPSelectionWidget(const QVector<IPAddress> &addresses, QWidget* parent = nullptr);
 	void createConnections();
 
+
+
 private:
 	QListWidget *ipList_;
 	QPushButton *refresh_;
 	QPushButton *CopyToSelected;
 	QVBoxLayout *parentLayout_;
 
+	std::unordered_set<QListWidgetItem*> previousSelectedItems_;
 	std::unordered_set<QListWidgetItem*> selectedIpItems_;
 private slots:
 	void highlightChecked();
 	void checkAllSelected(QListWidgetItem* item);
 	void ipClicked(QListWidgetItem* item);
+
+	void onItemPressed(QListWidgetItem* item);
+
+	void onItemActivated(QListWidgetItem* item);
+
+	void onItemChanged(QListWidgetItem* item);
+
+	void currentItemChanged(QListWidgetItem* item, QListWidgetItem* previous);
+
+	void onItemEntered();
+
+	void itemSelectionChanged();
 };
 

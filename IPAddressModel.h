@@ -11,6 +11,7 @@ public:
 		addresses_.append(IPAddress());
 		addresses_.append(IPAddress("142194"));
 	};
+
 	virtual Q_INVOKABLE int rowCount(const QModelIndex& parent) const override;
 	virtual Q_INVOKABLE QVariant data(const QModelIndex& index, int role) const override;
 	virtual Q_INVOKABLE QModelIndex index(int row, int column, const QModelIndex& parent) const override;
