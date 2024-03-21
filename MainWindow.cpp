@@ -1,10 +1,15 @@
 #include "MainWindow.h"
 #include <QtWidgets>
 #include "IPSelectionWidget.h"
+#include "IPAddress.h"
 
 MainWindow::MainWindow(QWidget* parent)
 {
-	IPSelectionWidget* widget = new IPSelectionWidget(this);
+	QVector<IPAddress> addresses;
+	addresses.append(IPAddress("192.9.200.6"));
+	addresses.append(IPAddress("192.9.200.7"));
+	addresses.append(IPAddress());
+	IPSelectionWidget* widget = new IPSelectionWidget(addresses,this);
 	widget->show();
 }
 MainWindow::~MainWindow()
