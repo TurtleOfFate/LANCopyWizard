@@ -19,11 +19,12 @@ public:
 private:
 	QListWidget* pathList_;
 	QPushButton* Submit;
-	QPushButton* addParhField;
+	QPushButton* addPathField;
 	QVBoxLayout* parentLayout_;
  	QVector<PathRowWidget*> pathRows_;
 
 	void createConnections();
+	void addPathItemToList(QListWidget* list);
 //	void toggleCheckState(QListWidgetItem* item);
 
 

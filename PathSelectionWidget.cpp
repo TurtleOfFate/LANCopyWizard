@@ -4,46 +4,53 @@
 #include <qdebug.h>
 #include <QSignalMapper>
 #include "PathRowWidget.h"
+#include <QLabel>
+#include <QHBoxLayout>
 
 PathSelectionWidget::PathSelectionWidget( QWidget* parent) : QWidget(parent)
 {
-
 	parentLayout_ = new QVBoxLayout(this);
-	pathRows_.push_back( new PathRowWidget(this)); // добавляем первую строку с путями в вектор
-	auto firstRow = pathRows_.back();
-	addParhField= new QPushButton(this);
-	Submit= new QPushButton(this);
 
+	QHBoxLayout* labelLayout = new QHBoxLayout(this);
+	QLabel* labelFrom = new QLabel("    copy from", this);
+	QLabel* labelTo = new QLabel("  copy to", this);
+	labelLayout->addWidget(labelFrom);
+	labelLayout->addWidget(labelTo);
+	parentLayout_->addLayout(labelLayout);
 
-	
-	parentLayout_->addWidget(Submit);
-	parentLayout_->addWidget(addParhField);
-
-
-	pathList_ = new QListWidget(this);
-	parentLayout_->addWidget(pathList_);
+	pathList_ = new QListWidget(this);	
 	pathList_->setSelectionBehavior(QAbstractItemView::SelectItems);
 	pathList_->setSelectionMode(QAbstractItemView::ExtendedSelection);
+	addPathItemToList(pathList_);
 
+	addPathField = new QPushButton("add new path", this);
+	Submit= new QPushButton("submit paths", this);
 
-	QListWidgetItem* item = new QListWidgetItem(pathList_);
-	//item->setFlags(item->flags() & (~Qt::ItemIsUserCheckable));
-	//item->setCheckState(Qt::CheckState::Unchecked);
-	item->setData(Qt::ItemDataRole::ToolTipRole, QObject::tr("I'm TOOLTIP 1"));
-	//item->setData(Qt::DisplayRole, QObject::tr(address.getAddress().toUtf8()));
-	item->setSizeHint(firstRow->sizeHint());
-	//lstWgt->setItemWidget(item, wgt);
-	pathList_->setItemWidget(item, firstRow);
+	parentLayout_->addWidget(pathList_);
+	parentLayout_->addWidget(addPathField);
+	parentLayout_->addWidget(Submit);
 
 	this->setLayout(parentLayout_);
 
 	createConnections();
-
 }
+
+void PathSelectionWidget::addPathItemToList(QListWidget *list)
+{
+	pathRows_.push_back(new PathRowWidget(this)); 
+	auto newRow = pathRows_.back();
+
+	QListWidgetItem* item = new QListWidgetItem(list);
+	item->setData(Qt::ItemDataRole::ToolTipRole, QObject::tr("I'm TOOLTIP 1"));
+	item->setSizeHint(newRow->sizeHint());
+	list->setItemWidget(item, newRow);
+}
+
+
 void PathSelectionWidget::createConnections()
 {
 	QObject::connect(Submit, SIGNAL(clicked()), this, SLOT(onSubmitClicked()));
-	QObject::connect(addParhField, SIGNAL(clicked()), this, SLOT(onAddPathClicked()));
+	QObject::connect(addPathField, SIGNAL(clicked()), this, SLOT(onAddPathClicked()));
 }
 
 void PathSelectionWidget::onSubmitClicked()
@@ -54,15 +61,5 @@ void PathSelectionWidget::onSubmitClicked()
 
 void PathSelectionWidget::onAddPathClicked()
 {
-	pathRows_.push_back(new PathRowWidget(this)); // добавляем строку с путями в вектор
-	auto newRow = pathRows_.back();
-
-	QListWidgetItem* item = new QListWidgetItem(pathList_);
-
-	//item->setFlags(item->flags() & (~Qt::ItemIsUserCheckable));
-	//item->setCheckState(Qt::CheckState::Unchecked);
-	item->setData(Qt::ItemDataRole::ToolTipRole, QObject::tr("I'm TOOLTIP %1").arg(pathRows_.size()));
-	//item->setData(Qt::DisplayRole, QObject::tr(address.getAddress().toUtf8()));
-	pathList_->setItemWidget(item, newRow);
-	qDebug() << "submitpath" << '\n';
+	addPathItemToList(pathList_);
 }

@@ -9,8 +9,8 @@ IPSelectionWidget::IPSelectionWidget(const QVector<IPAddress> &addresses,QWidget
 {
 	
 	ipList_ = new QListWidget(this);
-	refresh_ = new QPushButton(this);
-	CopyToSelected = new QPushButton(this);
+	refresh_ = new QPushButton("refresh", this);
+	CopyToSelected = new QPushButton("copy to selected ip", this);
 
 	parentLayout_ = new QVBoxLayout(this);
 	parentLayout_->addWidget(ipList_);

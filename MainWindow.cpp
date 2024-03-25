@@ -5,18 +5,27 @@
 #include "IPAddress.h"
 
 
+
 MainWindow::MainWindow(QWidget* parent)
 {
+	this->resize(600, 400);
 	QVector<IPAddress> addresses;
 	addresses.append(IPAddress("192.9.200.6"));
 	addresses.append(IPAddress("192.9.200.7"));
 	addresses.append(IPAddress());
 	IPSelectionWidget* ipWidget = new IPSelectionWidget(addresses,this);
 	PathSelectionWidget* pathWidget = new PathSelectionWidget(this);
-	mainWindowLayout = new QHBoxLayout;
-	mainWindowLayout->addWidget(pathWidget);
-	mainWindowLayout->addWidget(ipWidget);
-	this->setLayout(mainWindowLayout);
+	pathWidget->resize(500, this->height());
+	pathWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+	mainWindowSplitter_ = new QSplitter(this);
+	mainWindowSplitter_->setOrientation(Qt::Horizontal);
+	mainWindowSplitter_->addWidget(pathWidget);
+	mainWindowSplitter_->addWidget(ipWidget);
+	pathWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+
+	mainGrid_ = new QGridLayout(this);
+	mainGrid_->addWidget(mainWindowSplitter_);
+	this->setLayout(mainGrid_);
 }
 MainWindow::~MainWindow()
 {

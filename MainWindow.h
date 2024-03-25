@@ -1,7 +1,8 @@
 #pragma once
 #include <qobject.h>
 #include <qwidget.h>
-#include <QHBoxLayout>
+#include <QGridLayout>
+#include <QSplitter>
 
 class MainWindow  : public QWidget
 {
@@ -19,7 +20,8 @@ public slots:
 
 private:
 	
-	std::vector<QWidget> activeWidgets_;
-	QHBoxLayout* mainWindowLayout;
+	QVector<QWidget> activeWidgets_;
+	QSplitter * mainWindowSplitter_;
+	QGridLayout *mainGrid_;
 };
 
