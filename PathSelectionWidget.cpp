@@ -14,6 +14,7 @@ PathSelectionWidget::PathSelectionWidget( QWidget* parent) : QWidget(parent)
 	QHBoxLayout* labelLayout = new QHBoxLayout(this);
 	QLabel* labelFrom = new QLabel("    copy from", this);
 	QLabel* labelTo = new QLabel("  copy to", this);
+	labelLayout->setSpacing(100);
 	labelLayout->addWidget(labelFrom);
 	labelLayout->addWidget(labelTo);
 	parentLayout_->addLayout(labelLayout);
@@ -34,6 +35,8 @@ PathSelectionWidget::PathSelectionWidget( QWidget* parent) : QWidget(parent)
 
 	createConnections();
 }
+
+
 
 void PathSelectionWidget::addPathItemToList(QListWidget *list)
 {
