@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget* parent)
 	addresses.append(IPAddress("192.9.200.7"));
 	addresses.append(IPAddress());
 	IPSelectionWidget* ipWidget = new IPSelectionWidget(addresses,this);
-	PathSelectionWidget* pathWidget = new PathSelectionWidget( this);
+	PathSelectionWidget* pathWidget = new PathSelectionWidget(this);
 	mainWindowLayout = new QHBoxLayout;
 	mainWindowLayout->addWidget(pathWidget);
 	mainWindowLayout->addWidget(ipWidget);

@@ -17,7 +17,7 @@ class PathSelectionWidget : public QWidget
 public:
 	PathSelectionWidget(QWidget* parent = nullptr);
 private:
-	QListWidget* listOfPaths;
+	QListWidget* pathList_;
 	QPushButton* Submit;
 	QPushButton* addParhField;
 	QVBoxLayout* parentLayout_;

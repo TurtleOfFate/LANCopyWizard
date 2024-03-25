@@ -15,7 +15,7 @@ private:
 	QLineEdit* pathFrom;
 	QLineEdit* pathTo;
 	QSpacerItem* pathSpacer;
-	QHBoxLayout* rowLayouts_;
+	QHBoxLayout* rowLayout_;
 
 private slots:
 

@@ -3,14 +3,16 @@
 #include "IPAddress.h"
 #include <qdebug.h>
 #include <QSignalMapper>
+#include <QHostInfo>
 
 IPSelectionWidget::IPSelectionWidget(const QVector<IPAddress> &addresses,QWidget* parent) : QWidget(parent)
 {
-	parentLayout_ = new QVBoxLayout(this);
+	
 	ipList_ = new QListWidget(this);
 	refresh_ = new QPushButton(this);
 	CopyToSelected = new QPushButton(this);
 
+	parentLayout_ = new QVBoxLayout(this);
 	parentLayout_->addWidget(ipList_);
 	parentLayout_->addWidget(refresh_);
 	parentLayout_->addWidget(CopyToSelected);
@@ -46,6 +48,31 @@ void IPSelectionWidget::createConnections()
 	QObject::connect(ipList_, SIGNAL(itemSelectionChanged()), this, SLOT(itemSelectionChanged()));
 }
 
+void IPSelectionWidget::lookUp(const QHostInfo& host)
+{
+	if (host.error() != QHostInfo::NoError) {
+
+		qDebug() << "Lookup failed:" << host.errorString();
+		return;
+	}
+
+	//if (host.addresses()[0].toString() == host.hostName())
+	//	return;
+	qDebug() << host.addresses()[0].toString() << '\n';
+	//QTableWidgetItem* ipItem = new QTableWidgetItem;
+	//ipItem->setText(host.addresses()[0].toString());
+	//QTableWidgetItem* hostItem = new QTableWidgetItem;
+	//hostItem->setText(host.hostName());
+
+	//if (ipItem->text() != hostItem->text()) {
+
+	//	ipItem->setTextColor(QColor(Qt::red));
+	//	hostItem->setTextColor(QColor(Qt::red));
+	//}
+	//ui->tableWidget->setItem(useRow, Col1, ipItem);
+	//ui->tableWidget->setItem(useRow, Col2, hostItem);
+	//useRow++;
+}
 void IPSelectionWidget::onItemPressed(QListWidgetItem* item)
 {
 	qDebug() << "onItemPressed" << '\n';
@@ -57,6 +84,10 @@ void IPSelectionWidget::onItemPressed(QListWidgetItem* item)
 		if (item->isSelected())
 			selectedIpItems_.emplace(item);
 	}
+
+	//for (int i = 1; i < 256; i++) {
+	//	QHostInfo::lookupHost(QString("192.9.206.%1").arg(i), this, SLOT(lookUp(QHostInfo)));
+	//}
 }
 void IPSelectionWidget::onItemActivated(QListWidgetItem* item)
 {

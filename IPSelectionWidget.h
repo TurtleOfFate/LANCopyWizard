@@ -7,7 +7,7 @@
 
 class IPAddress;
 class QListWidgetItem;
-
+class QHostInfo;
 class IPSelectionWidget : public QWidget
 {
 	Q_OBJECT
@@ -27,6 +27,7 @@ private:
 	std::unordered_set<QListWidgetItem*> selectedIpItems_;
 
 private slots:
+	void lookUp(const QHostInfo& host);
 
 	void onIpClicked(QListWidgetItem * currentItem);
 
