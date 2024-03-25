@@ -1,7 +1,9 @@
 #include "MainWindow.h"
 #include <QtWidgets>
 #include "IPSelectionWidget.h"
+#include "PathSelectionWidget.h"
 #include "IPAddress.h"
+
 
 MainWindow::MainWindow(QWidget* parent)
 {
@@ -9,8 +11,12 @@ MainWindow::MainWindow(QWidget* parent)
 	addresses.append(IPAddress("192.9.200.6"));
 	addresses.append(IPAddress("192.9.200.7"));
 	addresses.append(IPAddress());
-	IPSelectionWidget* widget = new IPSelectionWidget(addresses,this);
-	widget->show();
+	IPSelectionWidget* ipWidget = new IPSelectionWidget(addresses,this);
+	PathSelectionWidget* pathWidget = new PathSelectionWidget( this);
+	mainWindowLayout = new QHBoxLayout;
+	mainWindowLayout->addWidget(pathWidget);
+	mainWindowLayout->addWidget(ipWidget);
+	this->setLayout(mainWindowLayout);
 }
 MainWindow::~MainWindow()
 {

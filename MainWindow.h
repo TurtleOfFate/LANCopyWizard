@@ -1,6 +1,7 @@
 #pragma once
 #include <qobject.h>
 #include <qwidget.h>
+#include <QHBoxLayout>
 
 class MainWindow  : public QWidget
 {
@@ -19,5 +20,6 @@ public slots:
 private:
 	
 	std::vector<QWidget> activeWidgets_;
+	QHBoxLayout* mainWindowLayout;
 };
 
