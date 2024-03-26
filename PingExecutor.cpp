@@ -4,7 +4,7 @@
 
 void PingExecutor::ping()
 {
-    process_ = new QProcess(this);
+    
     QObject::connect(process_, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(onPingEnded()));
 #ifndef WIN32
     process_.start("ping", QStringList() << "-c" << "1" << ip_);
@@ -18,6 +18,7 @@ void PingExecutor::ping()
 PingExecutor::PingExecutor(const QString& ip, QObject* parent) : QObject(parent)
 {
     ip_ = ip;
+    process_ = new QProcess(this);
 }
 
 QMutex messageMutex;
@@ -30,12 +31,14 @@ void PingExecutor::onPingEnded()
        // qDebug() << output;
         if (-1 != QString(output).indexOf("ttl", 0, Qt::CaseInsensitive))
         {
-            qDebug() << "PING OK" << ip_;
+            //qDebug() << "PING OK" << ip_;
+            emit pingSucceded(ip_);
         }
         else
         {
-            qDebug() << "NO PING" << ip_;;
-        }
+            //qDebug() << "NO PING" << ip_;;
+            emit pingFailed(ip_);
+        }         
     }
 }
 

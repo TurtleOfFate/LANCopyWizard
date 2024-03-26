@@ -15,8 +15,12 @@ class IPSelectionWidget : public QWidget
 
 public:
 	IPSelectionWidget(const QVector<IPAddress> &addresses, QWidget* parent = nullptr);
+	void addAddress(const QString& ip);
+	void removeAddress(const QString& ip);
 private:
 	void createConnections();
+
+	void setAddresses(const QVector<IPAddress>& addresses);
 
 	
 private:
@@ -30,6 +34,8 @@ private:
 	IPController* ipController_;
 private slots:
 	void onRefreshClicked();
+
+	void onIPsRefreshed(const QVector<QString>& ips);
 
 	void onIpClicked(QListWidgetItem * currentItem);
 

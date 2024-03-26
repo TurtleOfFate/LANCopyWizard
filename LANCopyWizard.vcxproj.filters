@@ -52,10 +52,19 @@
     <ClCompile Include="IPSelectionWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IPAddressModel.cpp">
+    <ClCompile Include="IPAddress.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IPAddress.cpp">
+    <ClCompile Include="IPController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PathRowWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PathSelectionWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PingExecutor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -66,7 +75,16 @@
     <QtMoc Include="IPSelectionWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="IPAddressModel.h">
+    <QtMoc Include="IPController.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="PathRowWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="PathSelectionWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="PingExecutor.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

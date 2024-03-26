@@ -20,7 +20,8 @@ private slots:
     void onPingEnded();
 signals:
     void finished(); 
-
+    void pingSucceded(const QString& ip);
+    void pingFailed(const QString& ip);
 private:
     QProcess *process_;
     QString ip_;

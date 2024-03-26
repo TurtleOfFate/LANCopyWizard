@@ -1,7 +1,9 @@
 #pragma once
-#include <QVector>
+
 #include <QString>
 #include <QObject>
+#include <QSet>
+#include <QWaitCondition>
 
 class IPController : public QObject 
 {
@@ -9,14 +11,22 @@ class IPController : public QObject
 public:
 	IPController(QObject* parent = nullptr);
 	void refreshActiveIPsOnLan();
-	QVector<QString> getActiveIPsList() const
+
+	QSet<QString> getActiveIPs() const
 	{ 
 		return activeIPs_; 
 	};
-private:
-	QVector<QString> activeIPs_;
+
+public slots:
+	void onIpActive(const QString& ip);
+	void onPingFinished();
 signals:
 	void activeIpsRefreshed(QVector<QString> activeIPs);
-
+	
+private:
+	QSet<QString> activeIPs_;
+	int refreshedIpsCount = 0;
+	std::atomic<int> executedPingsCounter_ = 0;
+	const int hostsCount_ = 255;
 };
 
