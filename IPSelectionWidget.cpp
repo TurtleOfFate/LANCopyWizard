@@ -1,4 +1,4 @@
-#include "IPSelectionWidget.h"
+﻿#include "IPSelectionWidget.h"
 #include <qlistwidget.h>
 #include "IPAddress.h"
 #include <qdebug.h>
@@ -61,8 +61,38 @@ void IPSelectionWidget::onItemPressed(QListWidgetItem* item)
 			selectedIpItems_.emplace(item);
 	}
 
-	PingExecutor e;
-	e.OnPing();
+	QString baseNetowrk = "192.9.206.";
+	for (int i = 0; i < 255; i++)
+	{
+
+		QString currIp(baseNetowrk + QString::number(i));
+		PingExecutor* pingWorker = new PingExecutor(currIp);
+		QThread* thread = new QThread;
+		pingWorker->moveToThread(thread);
+		connect(thread, SIGNAL(started()), pingWorker, SLOT(ping()));
+		connect(pingWorker, SIGNAL(finished()), thread, SLOT(quit()));
+		//connect(this, SIGNAL(stopAll()), pingWorker, SLOT(stop()));
+		connect(pingWorker, SIGNAL(finished()), pingWorker, SLOT(deleteLater()));
+		connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+		thread->start();
+	}
+
+	//PingExecutor* pingWorker = new PingExecutor;
+	////pingWorker->ping();
+
+	//QThread* thread = new QThread;
+	////pingWorker->ping(); /* передаем список файлов для обработки */
+
+	//pingWorker->moveToThread(thread);
+
+	///*  Теперь внимательно следите за руками.  Раз: */
+	//connect(thread, SIGNAL(started()), pingWorker, SLOT(ping()));
+	///* … и при запуске потока будет вызван метод process(), который создаст построитель отчетов, который будет работать в новом потоке
+
+	//Два: */
+	//connect(pingWorker, SIGNAL(finished()), thread, SLOT(quit()));
+	//thread->start();
+
 //	QString baseNetowrk = "192.9.206.";
 //#if defined(WIN32)
 //	QString parameter = "-n";

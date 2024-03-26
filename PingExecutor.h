@@ -4,35 +4,28 @@
 #include <QDebug>
 #include <QWidget>
 
-class PingExecutor : public QThread 
+class PingExecutor : public QObject 
 {
     Q_OBJECT
-
 public:
-    PingExecutor(QWidget* parent = nullptr);
-    void OnPing();
+    PingExecutor(const QString& ip);
+
+    PingExecutor::~PingExecutor()
+    {
+        if (process_ != nullptr) {
+            delete process_;
+        }
+    }
+
+public slots:
+    void ping();
+    void ping(const QString& ip);
 private slots:
-   // void OnPing();
-    void OnPingEnded();
+    void onPingEnded();
+signals:
+    void finished(); 
+
 private:
-    QProcess process_;
+    QProcess *process_;
+    QString ip_;
 };
-
-
-
-//QString baseNetowrk = "192.9.206.";
-//#if defined(WIN32)
-//QString parameter = "-n";
-//#else
-//QString parameter = "-c";
-//#endif
-//for (int i = 0; i < 255; i++) {
-//    QString currIp(baseNetowrk + QString::number(i));
-//    int exitCode = QProcess::execute("ping", QStringList() << parameter << "1" << currIp);
-//    if (exitCode == 0) {
-//        qDebug() << "alive:" << baseNetowrk + QString::number(i);
-//    }
-//    else {
-//        qDebug() << "dead";
-//    }
-//}
