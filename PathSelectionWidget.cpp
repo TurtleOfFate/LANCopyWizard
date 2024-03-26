@@ -11,7 +11,7 @@ PathSelectionWidget::PathSelectionWidget( QWidget* parent) : QWidget(parent)
 {
 	parentLayout_ = new QVBoxLayout(this);
 
-	QHBoxLayout* labelLayout = new QHBoxLayout(this);
+	QHBoxLayout* labelLayout = new QHBoxLayout();
 	QLabel* labelFrom = new QLabel("    copy from", this);
 	QLabel* labelTo = new QLabel("  copy to", this);
 	labelLayout->setSpacing(100);

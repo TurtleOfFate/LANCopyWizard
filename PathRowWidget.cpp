@@ -8,35 +8,49 @@
 #include <QFileDialog>
 #include <QCoreApplication>
 
-
-
 PathRowWidget::PathRowWidget(QWidget* parent) : QWidget(parent)
 {
+	fileDialog_ = new QFileDialog(parent);
+
+	connect(fileDialog_, &QFileDialog::currentChanged, this, [&](const QString& str)
+	{
+		QFileInfo info(str);
+		if (info.isFile())
+			fileDialog_->setFileMode(QFileDialog::ExistingFile);
+		else if (info.isDir())
+			fileDialog_->setFileMode(QFileDialog::Directory);		
+	});
+
 	 pathBrowse = new QPushButton("...", this);
-	 pathFrom = new QLineEdit(this);
-	 pathTo = new QLineEdit(this);
-	 pathSpacer = new QSpacerItem(1,1);
+	 pathFrom_ = new QLineEdit(this);
+	 pathTo_ = new QLineEdit(this);
+	 pathSpacer_ = new QSpacerItem(1,1);
 	 rowLayout_ = new QHBoxLayout(this);
 	 rowLayout_->addWidget(pathBrowse);
-	 rowLayout_->addWidget(pathFrom);
-	 rowLayout_->addSpacerItem(pathSpacer);
-	 rowLayout_->addWidget(pathTo);
+	 rowLayout_->addWidget(pathFrom_);
+	 rowLayout_->addSpacerItem(pathSpacer_);
+	 rowLayout_->addWidget(pathTo_);
+	
+	 fileDialog_->setOption(QFileDialog::DontUseNativeDialog);
 
-	 QObject::connect(pathBrowse, SIGNAL(clicked()), this, SLOT(onBrowse()));
-	// QObject::connect(addPathField, SIGNAL(clicked()), this, SLOT(onAddPathClicked()));
+	 QObject::connect(pathBrowse, SIGNAL(clicked()), this, SLOT(onChooseFileBrowse()));	
+	 QObject::connect(fileDialog_, SIGNAL(finished(int)), this, SLOT(onChooseFileFinished(int)));
 
 	 this->setLayout(rowLayout_);
 }
 
-void PathRowWidget::onBrowse()
+void PathRowWidget::onChooseFileBrowse()
 {
-
-	QString runPath = QCoreApplication::applicationDirPath(); // Get the root path of the project
-	QString file_name = QFileDialog::getOpenFileName(this, QStringLiteral("Select a document"), runPath, "", nullptr, QFileDialog::DontResolveSymlinks);
-//	QString file_name = QFileDialog::getExistingDirectory(0, "Select a Directory", pathFrom->text(), QFileDialog::DontResolveSymlinks);
-
-	if (!file_name.isEmpty())
-	{
-		pathFrom->setText(file_name);
-	}
+	fileDialog_->open();
 }
+
+void PathRowWidget::onChooseFileFinished(int result)
+{
+	if (result == QDialog::Rejected)
+		return;
+	QStringList files = fileDialog_->selectedFiles();
+	if (files.empty())
+		return;
+	pathFrom_->setText(files[0]);
+}
+

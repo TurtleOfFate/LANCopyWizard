@@ -25,8 +25,6 @@ private:
 
 	void createConnections();
 	void addPathItemToList(QListWidget* list);
-//	void toggleCheckState(QListWidgetItem* item);
-
 
 private slots:
 
@@ -34,15 +32,4 @@ private slots:
 
 	void onAddPathClicked();
 
-	//void onItemPressed(QListWidgetItem* item);
-
-	//void onItemActivated(QListWidgetItem* item);
-
-	//void onItemChanged(QListWidgetItem* item);
-
-	//void currentItemChanged(QListWidgetItem* item, QListWidgetItem* previous);
-
-	//void onItemEntered();
-
-	//void itemSelectionChanged();
 };

@@ -40,39 +40,12 @@ void IPSelectionWidget::createConnections()
 {
 	QObject::connect(ipList_, SIGNAL(itemPressed(QListWidgetItem*)), this, SLOT(onItemPressed(QListWidgetItem*)));
 	QObject::connect(ipList_, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(onItemActivated(QListWidgetItem*)));
-	QObject::connect(ipList_, SIGNAL(itemEntered(QListWidgetItem*)), this, SLOT(onItemEntered(QListWidgetItem*)));
 	QObject::connect(ipList_, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(onItemChanged(QListWidgetItem*)));
 	QObject::connect(ipList_, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem *)), this, SLOT(currentItemChanged(QListWidgetItem*, QListWidgetItem*)));
 	QObject::connect(ipList_, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(onIpClicked(QListWidgetItem*)));
-	QObject::connect(ipList_, SIGNAL(itemSelectionChanged()), this, SLOT(highlightChecked()));
 	QObject::connect(ipList_, SIGNAL(itemSelectionChanged()), this, SLOT(itemSelectionChanged()));
 }
 
-void IPSelectionWidget::lookUp(const QHostInfo& host)
-{
-	if (host.error() != QHostInfo::NoError) {
-
-		qDebug() << "Lookup failed:" << host.errorString();
-		return;
-	}
-
-	//if (host.addresses()[0].toString() == host.hostName())
-	//	return;
-	qDebug() << host.addresses()[0].toString() << '\n';
-	//QTableWidgetItem* ipItem = new QTableWidgetItem;
-	//ipItem->setText(host.addresses()[0].toString());
-	//QTableWidgetItem* hostItem = new QTableWidgetItem;
-	//hostItem->setText(host.hostName());
-
-	//if (ipItem->text() != hostItem->text()) {
-
-	//	ipItem->setTextColor(QColor(Qt::red));
-	//	hostItem->setTextColor(QColor(Qt::red));
-	//}
-	//ui->tableWidget->setItem(useRow, Col1, ipItem);
-	//ui->tableWidget->setItem(useRow, Col2, hostItem);
-	//useRow++;
-}
 void IPSelectionWidget::onItemPressed(QListWidgetItem* item)
 {
 	qDebug() << "onItemPressed" << '\n';
@@ -84,10 +57,6 @@ void IPSelectionWidget::onItemPressed(QListWidgetItem* item)
 		if (item->isSelected())
 			selectedIpItems_.emplace(item);
 	}
-
-	//for (int i = 1; i < 256; i++) {
-	//	QHostInfo::lookupHost(QString("192.9.206.%1").arg(i), this, SLOT(lookUp(QHostInfo)));
-	//}
 }
 void IPSelectionWidget::onItemActivated(QListWidgetItem* item)
 {
@@ -101,10 +70,7 @@ void IPSelectionWidget::currentItemChanged(QListWidgetItem* item, QListWidgetIte
 {
 	qDebug() << "currentItemChanged" << '\n';
 }
-void IPSelectionWidget::onItemEntered()
-{
-	qDebug() << "onItemEntered" << '\n';
-}
+
 void IPSelectionWidget::itemSelectionChanged()
 {
 	qDebug() << "itemSelectionChanged" << '\n';

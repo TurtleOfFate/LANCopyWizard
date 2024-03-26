@@ -14,18 +14,23 @@ MainWindow::MainWindow(QWidget* parent)
 	addresses.append(IPAddress("192.9.200.7"));
 	addresses.append(IPAddress());
 	IPSelectionWidget* ipWidget = new IPSelectionWidget(addresses,this);
+	ipWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+	ipWidget->setMinimumSize(10, this->height());
+
 	PathSelectionWidget* pathWidget = new PathSelectionWidget(this);
 	pathWidget->resize(500, this->height());
 	pathWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
 	mainWindowSplitter_ = new QSplitter(this);
 	mainWindowSplitter_->setOrientation(Qt::Horizontal);
 	mainWindowSplitter_->addWidget(pathWidget);
 	mainWindowSplitter_->addWidget(ipWidget);
-	pathWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-
+	//pathWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+	pathWidget->setMinimumSize(10, this->height());
+	//pathWidget->setFixedWidth(100);
 	mainGrid_ = new QGridLayout(this);
 	mainGrid_->addWidget(mainWindowSplitter_);
-	this->setLayout(mainGrid_);
+	//this->setLayout(mainGrid_);
 }
 MainWindow::~MainWindow()
 {

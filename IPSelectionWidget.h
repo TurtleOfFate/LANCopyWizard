@@ -27,8 +27,6 @@ private:
 	std::unordered_set<QListWidgetItem*> selectedIpItems_;
 
 private slots:
-	void lookUp(const QHostInfo& host);
-
 	void onIpClicked(QListWidgetItem * currentItem);
 
 	void onItemPressed(QListWidgetItem* item);
@@ -38,8 +36,6 @@ private slots:
 	void onItemChanged(QListWidgetItem* item);
 
 	void currentItemChanged(QListWidgetItem* item, QListWidgetItem* previous);
-
-	void onItemEntered();
 
 	void itemSelectionChanged();
 };
