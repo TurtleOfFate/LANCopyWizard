@@ -8,18 +8,14 @@ class PingExecutor : public QObject
 {
     Q_OBJECT
 public:
-    PingExecutor(const QString& ip);
-
-    PingExecutor::~PingExecutor()
+  
+    PingExecutor(const QString& ip,QObject *parent = nullptr);
+    ~PingExecutor()
     {
-        if (process_ != nullptr) {
-            delete process_;
-        }
-    }
-
+        qDebug() << "DELETED PING EXECUTOR";
+    };
 public slots:
     void ping();
-    void ping(const QString& ip);
 private slots:
     void onPingEnded();
 signals:

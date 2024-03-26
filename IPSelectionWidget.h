@@ -8,6 +8,7 @@
 class IPAddress;
 class QListWidgetItem;
 class QHostInfo;
+class IPController;
 class IPSelectionWidget : public QWidget
 {
 	Q_OBJECT
@@ -17,6 +18,7 @@ public:
 private:
 	void createConnections();
 
+	
 private:
 	QListWidget *ipList_;
 	QPushButton *refresh_;
@@ -25,8 +27,10 @@ private:
 	void toggleCheckState(QListWidgetItem* item);
 	std::unordered_set<QListWidgetItem*> previousSelectedItems_;
 	std::unordered_set<QListWidgetItem*> selectedIpItems_;
-
+	IPController* ipController_;
 private slots:
+	void onRefreshClicked();
+
 	void onIpClicked(QListWidgetItem * currentItem);
 
 	void onItemPressed(QListWidgetItem* item);

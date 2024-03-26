@@ -7,10 +7,11 @@
 #include <QProcess>
 #include <QNetworkInterface>
 #include "PingExecutor.h"
+#include "IPController.h"
 
 IPSelectionWidget::IPSelectionWidget(const QVector<IPAddress> &addresses,QWidget* parent) : QWidget(parent)
 {
-	
+	ipController_ = new IPController(this);
 	ipList_ = new QListWidget(this);
 	refresh_ = new QPushButton("Refresh", this);
 	CopyToSelected = new QPushButton("Send", this);
@@ -41,12 +42,19 @@ IPSelectionWidget::IPSelectionWidget(const QVector<IPAddress> &addresses,QWidget
 
 void IPSelectionWidget::createConnections()
 {
+	QObject::connect(refresh_, SIGNAL(clicked()), this, SLOT(onRefreshClicked()));
 	QObject::connect(ipList_, SIGNAL(itemPressed(QListWidgetItem*)), this, SLOT(onItemPressed(QListWidgetItem*)));
 	QObject::connect(ipList_, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(onItemActivated(QListWidgetItem*)));
 	QObject::connect(ipList_, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(onItemChanged(QListWidgetItem*)));
 	QObject::connect(ipList_, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem *)), this, SLOT(currentItemChanged(QListWidgetItem*, QListWidgetItem*)));
 	QObject::connect(ipList_, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(onIpClicked(QListWidgetItem*)));
 	QObject::connect(ipList_, SIGNAL(itemSelectionChanged()), this, SLOT(itemSelectionChanged()));
+}
+
+void IPSelectionWidget::onRefreshClicked()
+{
+	QVector<QString> active;
+	ipController_->refreshActiveIPsOnLan();
 }
 
 void IPSelectionWidget::onItemPressed(QListWidgetItem* item)
@@ -61,36 +69,38 @@ void IPSelectionWidget::onItemPressed(QListWidgetItem* item)
 			selectedIpItems_.emplace(item);
 	}
 
-	QString baseNetowrk = "192.9.206.";
-	for (int i = 0; i < 255; i++)
-	{
 
-		QString currIp(baseNetowrk + QString::number(i));
-		PingExecutor* pingWorker = new PingExecutor(currIp);
-		QThread* thread = new QThread;
-		pingWorker->moveToThread(thread);
-		connect(thread, SIGNAL(started()), pingWorker, SLOT(ping()));
-		connect(pingWorker, SIGNAL(finished()), thread, SLOT(quit()));
-		//connect(this, SIGNAL(stopAll()), pingWorker, SLOT(stop()));
-		connect(pingWorker, SIGNAL(finished()), pingWorker, SLOT(deleteLater()));
-		connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-		thread->start();
-	}
+	//cont->activeIpsRefreshed(active);
+	//QString baseNetowrk = "192.9.206.";
+	//for (int i = 0; i < 255; i++)
+	//{
 
-	//PingExecutor* pingWorker = new PingExecutor;
-	////pingWorker->ping();
+	//	QString currIp(baseNetowrk + QString::number(i));
+	//	PingExecutor* pingExecutor = new PingExecutor(currIp);
+	//	QThread* thread = new QThread;
+	//	pingExecutor->moveToThread(thread);
+	//	connect(thread, SIGNAL(started()), pingExecutor, SLOT(ping()));
+	//	connect(pingExecutor, SIGNAL(finished()), thread, SLOT(quit()));
+	//	//connect(this, SIGNAL(stopAll()), pingExecutor, SLOT(stop()));
+	//	connect(pingExecutor, SIGNAL(finished()), pingExecutor, SLOT(deleteLater()));
+	//	connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+	//	thread->start();
+	//}
+
+	//PingExecutor* pingExecutor = new PingExecutor;
+	////pingExecutor->ping();
 
 	//QThread* thread = new QThread;
-	////pingWorker->ping(); /* передаем список файлов для обработки */
+	////pingExecutor->ping(); /* передаем список файлов для обработки */
 
-	//pingWorker->moveToThread(thread);
+	//pingExecutor->moveToThread(thread);
 
 	///*  Теперь внимательно следите за руками.  Раз: */
-	//connect(thread, SIGNAL(started()), pingWorker, SLOT(ping()));
+	//connect(thread, SIGNAL(started()), pingExecutor, SLOT(ping()));
 	///* … и при запуске потока будет вызван метод process(), который создаст построитель отчетов, который будет работать в новом потоке
 
 	//Два: */
-	//connect(pingWorker, SIGNAL(finished()), thread, SLOT(quit()));
+	//connect(pingExecutor, SIGNAL(finished()), thread, SLOT(quit()));
 	//thread->start();
 
 //	QString baseNetowrk = "192.9.206.";

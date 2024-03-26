@@ -1,45 +1,29 @@
 #include "PingExecutor.h"
 #include <QObject>
+#include <QMutex>
 
 void PingExecutor::ping()
 {
-    process_ = new QProcess;
-    QString baseNetowrk = "192.9.206.";
-    //for (int i = 0; i < 255; i++) 
-    {
-       // QString currIp(baseNetowrk + QString::number(i));
-        QObject::connect(process_, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(onPingEnded()));
+    process_ = new QProcess(this);
+    QObject::connect(process_, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(onPingEnded()));
 #ifndef WIN32
-        process_.start("ping", QStringList() << "-c" << "1" << ip_);
+    process_.start("ping", QStringList() << "-c" << "1" << ip_);
 #else
-        process_->start("ping", QStringList() << "-n" << "1" << ip_);
+    process_->start("ping", QStringList() << "-n" << "1" << ip_);
 #endif
-        process_->waitForFinished();
-
-    }
+    process_->waitForFinished(10000);
     emit finished();
 }
 
-PingExecutor::PingExecutor(const QString& ip)
+PingExecutor::PingExecutor(const QString& ip, QObject* parent) : QObject(parent)
 {
     ip_ = ip;
 }
 
-void PingExecutor::ping(const QString& ip)
-{
-    process_ = new QProcess;
-    QObject::connect(process_, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(onPingEnded()));
-#ifndef WIN32
-    process_.start("ping", QStringList() << "-c" << "1" << ip);
-#else
-    process_->start("ping", QStringList() << "-n" << "1" << ip);
-#endif
-    process_->waitForFinished();
-    emit finished();
-}
-
+QMutex messageMutex;
 void PingExecutor::onPingEnded()
 {
+    QMutexLocker locker(&messageMutex);
     QByteArray output = process_->readAllStandardOutput();
     if (!output.isEmpty())
     {
@@ -50,7 +34,7 @@ void PingExecutor::onPingEnded()
         }
         else
         {
-            //qDebug() << "PING KO";
+            qDebug() << "NO PING" << ip_;;
         }
     }
 }
