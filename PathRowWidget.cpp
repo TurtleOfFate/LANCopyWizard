@@ -13,23 +13,34 @@
 
 PathRowWidget::PathRowWidget(QWidget* parent) : QWidget(parent)
 {
-	fileDialog_ = new QFileDialog(parent);
+	createFileDialog();
+	createEditPaths();
+	createRowLayout();
+}
+
+void PathRowWidget::createFileDialog()
+{
+	fileDialog_ = new QFileDialog(this);
 
 	connect(fileDialog_, &QFileDialog::currentChanged, this, [&](const QString& str)
-	{
-		QFileInfo info(str);
-		if (info.isFile())
-			fileDialog_->setFileMode(QFileDialog::ExistingFile);
-		else if (info.isDir())
-			fileDialog_->setFileMode(QFileDialog::Directory);		
-	});
+		{
+			QFileInfo info(str);
+			if (info.isFile())
+				fileDialog_->setFileMode(QFileDialog::ExistingFile);
+			else if (info.isDir())
+				fileDialog_->setFileMode(QFileDialog::Directory);
+		});
 
+	fileDialog_->setOption(QFileDialog::DontUseNativeDialog);
+	QObject::connect(fileDialog_, SIGNAL(finished(int)), this, SLOT(onChooseFileFinished(int)));
+}
+
+void PathRowWidget::createEditPaths()
+{
 	pathFrom_ = new QLineEdit(this);
 	currentEditPath_ = pathFrom_;
 
 	pathTo_ = new QLineEdit(this);
-	pathSpacer_ = new QSpacerItem(1,1);
-	rowLayout_ = new QHBoxLayout(this);
 
 	QIcon browseFolderIcon;
 	QSize pixSize = QSize(64, 64);
@@ -39,18 +50,20 @@ PathRowWidget::PathRowWidget(QWidget* parent) : QWidget(parent)
 	connect(onPathFromFolderBrowseClicked, &QAction::triggered, this, std::bind(&PathRowWidget::onChooseFileBrowse, this, pathFrom_));
 
 	QAction* onPathToFolderBrowseClicked = pathTo_->addAction(browseFolderIcon, QLineEdit::ActionPosition::TrailingPosition);
-	connect(onPathToFolderBrowseClicked, &QAction::triggered, this, std::bind(&PathRowWidget::onChooseFileBrowse,this,pathTo_));
+	connect(onPathToFolderBrowseClicked, &QAction::triggered, this, std::bind(&PathRowWidget::onChooseFileBrowse, this, pathTo_));
+}
 
+
+void PathRowWidget::createRowLayout()
+{
+	pathSpacer_ = new QSpacerItem(1, 1);
+	rowLayout_ = new QHBoxLayout(this);
 	rowLayout_->addWidget(pathFrom_);
 	rowLayout_->addSpacerItem(pathSpacer_);
 	rowLayout_->addWidget(pathTo_);
-	
-	fileDialog_->setOption(QFileDialog::DontUseNativeDialog);
-
-	QObject::connect(fileDialog_, SIGNAL(finished(int)), this, SLOT(onChooseFileFinished(int)));
-
 	this->setLayout(rowLayout_);
 }
+
 
 void PathRowWidget::onChooseFileBrowse(QLineEdit* chosenEditPath)
 {

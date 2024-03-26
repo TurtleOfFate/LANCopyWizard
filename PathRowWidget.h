@@ -14,6 +14,13 @@ class PathRowWidget : public QWidget
 public:
 	PathRowWidget(QWidget* parent = nullptr);
 
+
+
+private:
+	void createFileDialog();
+	void createEditPaths();
+	void createRowLayout();
+
 private:
 	QFileDialog* fileDialog_;
 
