@@ -4,6 +4,9 @@
 #include <qdebug.h>
 #include <QSignalMapper>
 #include <QHostInfo>
+#include <QProcess>
+#include <QNetworkInterface>
+#include "PingExecutor.h"
 
 IPSelectionWidget::IPSelectionWidget(const QVector<IPAddress> &addresses,QWidget* parent) : QWidget(parent)
 {
@@ -57,6 +60,53 @@ void IPSelectionWidget::onItemPressed(QListWidgetItem* item)
 		if (item->isSelected())
 			selectedIpItems_.emplace(item);
 	}
+
+	PingExecutor e;
+	e.OnPing();
+//	QString baseNetowrk = "192.9.206.";
+//#if defined(WIN32)
+//	QString parameter = "-n";
+//#else
+//	QString parameter = "-c";
+//#endif
+//	for (int i = 0; i < 255; i++) {
+//		QString currIp(baseNetowrk + QString::number(i));
+//		int exitCode = QProcess::execute("ping", QStringList() << parameter << "1" << currIp);
+//		if (exitCode == 0) {
+//			qDebug() << "alive:" << baseNetowrk + QString::number(i);
+//		}
+//		else {
+//			qDebug() << "dead";
+//		}
+//	}
+
+
+
+	//QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
+	//for (int i = 0; i < interfaces.count(); i++)
+	//{
+	//	QList<QNetworkAddressEntry> entries = interfaces.at(i).addressEntries();
+	//	for (int j = 0; j < entries.count(); j++)
+	//	{
+	//		if (entries.at(j).ip().protocol() == QAbstractSocket::IPv4Protocol)
+	//		{
+	//			QString ip = entries.at(j).ip().toString();
+	//			int exitCode = QProcess::execute("ping", QStringList()
+	//				<< "-n" << "1"
+	//				<< ip);
+	//			if (exitCode == 0) {
+	//				// it's alive
+	//				qDebug() << "alive" << '\n';
+	//			}
+	//			else {
+	//				// it's dead
+	//				qDebug() << "dead" << '\n';
+	//			}
+	//			qDebug() << entries.at(j).ip().toString();
+	//			qDebug() << entries.at(j).netmask().toString();
+	//		}
+	//	}
+	//}
 }
 void IPSelectionWidget::onItemActivated(QListWidgetItem* item)
 {
