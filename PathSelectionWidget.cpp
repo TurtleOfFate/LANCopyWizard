@@ -7,7 +7,7 @@
 #include <QLabel>
 #include <QHBoxLayout>
 
-PathSelectionWidget::PathSelectionWidget( QWidget* parent) : QWidget(parent)
+PathSelectionWidget::PathSelectionWidget(QWidget* parent) : QWidget(parent)
 {
 	parentLayout_ = new QVBoxLayout(this);
 
@@ -22,21 +22,21 @@ PathSelectionWidget::PathSelectionWidget( QWidget* parent) : QWidget(parent)
 	pathList_ = new QListWidget(this);	
 	pathList_->setSelectionBehavior(QAbstractItemView::SelectItems);
 	pathList_->setSelectionMode(QAbstractItemView::ExtendedSelection);
-	addPathItemToList(pathList_);
+	addToList(pathList_);
 
-	addPathField = new QPushButton("Add Path", this);
-	Submit= new QPushButton("Submit Paths", this);
+	addPath_ = new QPushButton("Add", this);
+	deletePath_= new QPushButton("Delete", this);
 
 	parentLayout_->addWidget(pathList_);
-	parentLayout_->addWidget(addPathField);
-	parentLayout_->addWidget(Submit);
+	parentLayout_->addWidget(addPath_);
+	parentLayout_->addWidget(deletePath_);
 
 	this->setLayout(parentLayout_);
 
 	createConnections();
 }
 
-void PathSelectionWidget::addPathItemToList(QListWidget *list)
+void PathSelectionWidget::addToList(QListWidget *list)
 {
 	pathRows_.push_back(new PathRowWidget(this)); 
 	auto newRow = pathRows_.back();
@@ -46,20 +46,24 @@ void PathSelectionWidget::addPathItemToList(QListWidget *list)
 	list->setItemWidget(item, newRow);
 }
 
-
 void PathSelectionWidget::createConnections()
 {
-	QObject::connect(Submit, SIGNAL(clicked()), this, SLOT(onSubmitClicked()));
-	QObject::connect(addPathField, SIGNAL(clicked()), this, SLOT(onAddPathClicked()));
+	QObject::connect(deletePath_, SIGNAL(clicked()), this, SLOT(onDeletePathClicked()));
+	QObject::connect(addPath_, SIGNAL(clicked()), this, SLOT(onAddPathClicked()));
 }
 
-void PathSelectionWidget::onSubmitClicked()
+void PathSelectionWidget::deleteSelectedFromList(QListWidget* list)
 {
-	qDebug() << "submitpath" << '\n';
+	qDeleteAll(list->selectedItems());
 }
 
 
 void PathSelectionWidget::onAddPathClicked()
 {
-	addPathItemToList(pathList_);
+	addToList(pathList_);
+}
+
+void PathSelectionWidget::onDeletePathClicked()
+{
+	deleteSelectedFromList(pathList_);
 }

@@ -18,18 +18,19 @@ public:
 	PathSelectionWidget(QWidget* parent = nullptr);
 private:
 	QListWidget* pathList_;
-	QPushButton* Submit;
-	QPushButton* addPathField;
+	QPushButton* deletePath_;
+	QPushButton* addPath_;
 	QVBoxLayout* parentLayout_;
  	QVector<PathRowWidget*> pathRows_;
 
 	void createConnections();
-	void addPathItemToList(QListWidget* list);
+	void deleteSelectedFromList(QListWidget* list);
+	void addToList(QListWidget* list);
 
 private slots:
 
-	void onSubmitClicked();
-
 	void onAddPathClicked();
+
+	void onDeletePathClicked();
 
 };
