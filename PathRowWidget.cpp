@@ -51,6 +51,8 @@ void PathRowWidget::onChooseFileFinished(int result)
 	QStringList files = fileDialog_->selectedFiles();
 	if (files.empty())
 		return;
-	pathFrom_->setText(files[0]);
+	QString chosenPath = files[0];
+	pathFrom_->setText(chosenPath);
+	pathFrom_->setToolTip(chosenPath);
 }
 

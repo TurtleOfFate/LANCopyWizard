@@ -44,7 +44,6 @@ void PathSelectionWidget::addPathItemToList(QListWidget *list)
 	auto newRow = pathRows_.back();
 
 	QListWidgetItem* item = new QListWidgetItem(list);
-	item->setData(Qt::ItemDataRole::ToolTipRole, QObject::tr("I'm TOOLTIP 1"));
 	item->setSizeHint(newRow->sizeHint());
 	list->setItemWidget(item, newRow);
 }
