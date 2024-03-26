@@ -14,17 +14,17 @@ class PathRowWidget : public QWidget
 public:
 	PathRowWidget(QWidget* parent = nullptr);
 
-
 private:
 	QFileDialog* fileDialog_;
 
+	QLineEdit* currentEditPath_;
 	QLineEdit* pathFrom_;
 	QLineEdit* pathTo_;
 	QSpacerItem* pathSpacer_;
 	QHBoxLayout* rowLayout_;
-	QPushButton* pathBrowse;
 
 private slots:
-	void onChooseFileBrowse();
+
+	void onChooseFileBrowse(QLineEdit* chosenEditPath);
 	void onChooseFileFinished(int result);
 };

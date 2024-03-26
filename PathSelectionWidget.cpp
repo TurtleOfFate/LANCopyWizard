@@ -12,8 +12,8 @@ PathSelectionWidget::PathSelectionWidget( QWidget* parent) : QWidget(parent)
 	parentLayout_ = new QVBoxLayout(this);
 
 	QHBoxLayout* labelLayout = new QHBoxLayout();
-	QLabel* labelFrom = new QLabel("    copy from", this);
-	QLabel* labelTo = new QLabel("  copy to", this);
+	QLabel* labelFrom = new QLabel("    Copy from", this);
+	QLabel* labelTo = new QLabel("  Copy to", this);
 	labelLayout->setSpacing(100);
 	labelLayout->addWidget(labelFrom);
 	labelLayout->addWidget(labelTo);
@@ -24,8 +24,8 @@ PathSelectionWidget::PathSelectionWidget( QWidget* parent) : QWidget(parent)
 	pathList_->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	addPathItemToList(pathList_);
 
-	addPathField = new QPushButton("add new path", this);
-	Submit= new QPushButton("submit paths", this);
+	addPathField = new QPushButton("Add Path", this);
+	Submit= new QPushButton("Submit Paths", this);
 
 	parentLayout_->addWidget(pathList_);
 	parentLayout_->addWidget(addPathField);
@@ -35,8 +35,6 @@ PathSelectionWidget::PathSelectionWidget( QWidget* parent) : QWidget(parent)
 
 	createConnections();
 }
-
-
 
 void PathSelectionWidget::addPathItemToList(QListWidget *list)
 {
