@@ -3,8 +3,7 @@
 #include <QListWidget>
 #include <QVBoxLayout>
 #include <QPushButton>
-#include <unordered_set>
-
+#include <QProcess>
 class QListWidgetItem;
 class QHostInfo;
 class IPController;
@@ -24,9 +23,10 @@ private:
 	QPushButton *CopyToSelected;
 	QVBoxLayout *parentLayout_;
 	void toggleCheckState(QListWidgetItem* item);
-	std::unordered_set<QListWidgetItem*> previousSelectedItems_;
-	std::unordered_set<QListWidgetItem*> selectedIpItems_;
+	QSet<QListWidgetItem*> previousSelectedItems_;
+	QSet<QListWidgetItem*> selectedIpItems_;
 	IPController* ipController_;
+	QProcess* proc;
 private slots:
 	void onRefreshClicked();
 
@@ -37,6 +37,8 @@ private slots:
 	void onIpDelete(const QString& ip);
 
 	void onIpClicked(QListWidgetItem * currentItem);
+
+	void onXCopyEnded();
 
 	void onItemPressed(QListWidgetItem* item);
 

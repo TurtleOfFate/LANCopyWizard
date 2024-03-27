@@ -79,7 +79,11 @@ void IPSelectionWidget::onRefreshClicked()
 {
 	ipController_->refreshActiveIPsOnLan();
 }
-
+void IPSelectionWidget::onXCopyEnded()
+{
+	QByteArray output = proc->readAllStandardOutput();
+	qDebug() << output;
+}
 void IPSelectionWidget::onItemPressed(QListWidgetItem* item)
 {
 	//qDebug() << "onItemPressed" << '\n';
@@ -89,10 +93,12 @@ void IPSelectionWidget::onItemPressed(QListWidgetItem* item)
 	{
 		auto item = ipList_->item(i);
 		if (item->isSelected())
-			selectedIpItems_.emplace(item);
+			selectedIpItems_.insert(item);
 	}
-
-
+	proc = new QProcess(this);
+	QObject::connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(onXCopyEnded()));
+	auto command = QStringList() << "c:\\hehe.txt" << R"(\\)""192.9.206.59\\c\\Soft" << "/y";
+	//proc->start("xcopy", command);//QStringList() << "-n" << "1" << ip_
 	//cont->activeIpsRefreshed(active);
 	//QString baseNetowrk = "192.9.206.";
 	//for (int i = 0; i < 255; i++)
