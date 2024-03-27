@@ -12,7 +12,7 @@ public:
     PingExecutor(const QString& ip,QObject *parent = nullptr);
     ~PingExecutor()
     {
-        qDebug() << "DELETED PING EXECUTOR";
+        //qDebug() << "DELETED PING EXECUTOR";
     };
 public slots:
     void ping();

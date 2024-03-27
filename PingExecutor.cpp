@@ -4,7 +4,6 @@
 
 void PingExecutor::ping()
 {
-    
     QObject::connect(process_, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(onPingEnded()));
 #ifndef WIN32
     process_.start("ping", QStringList() << "-c" << "1" << ip_);
@@ -35,7 +34,8 @@ void PingExecutor::onPingEnded()
         else
         {
             emit pingFailed(ip_);
-        }         
+        }     
+       // qDebug() << "THREAD PingExecutor::onPingEnded: " << QThread::currentThread()->currentThreadId();
     }
 }
 

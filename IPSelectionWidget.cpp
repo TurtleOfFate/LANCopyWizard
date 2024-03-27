@@ -11,6 +11,7 @@
 
 IPSelectionWidget::IPSelectionWidget(IPController* controller,QWidget* parent) : QWidget(parent)
 {
+	qDebug() << "MAIN THREAD " << QThread::currentThread()->currentThreadId();
 	ipController_ = controller;
 	ipList_ = new QListWidget(this);
 	refresh_ = new QPushButton("Refresh", this);
@@ -28,6 +29,7 @@ IPSelectionWidget::IPSelectionWidget(IPController* controller,QWidget* parent) :
 
 	createConnections();
 	controller->refreshActiveIPsOnLan();
+
 }
 
 void IPSelectionWidget::addAddress(const QString& ip)
@@ -37,6 +39,16 @@ void IPSelectionWidget::addAddress(const QString& ip)
 	item->setFlags(item->flags() & (~Qt::ItemIsUserCheckable));
 	item->setCheckState(Qt::CheckState::Unchecked);
 	item->setData(Qt::DisplayRole, QObject::tr(ip.toUtf8()));
+}
+
+void IPSelectionWidget::onIPsRefreshed(const QSet<QString>& ips)
+{
+	qDebug() << "THREAD onIPsRefreshed: " << QThread::currentThread()->currentThreadId();
+	ipList_->clear();
+	foreach(auto ip, ips)
+	{
+		addAddress(ip);
+	}
 }
 
 
@@ -70,13 +82,12 @@ void IPSelectionWidget::setAddresses(const QVector<IPAddress>& addresses)
 
 void IPSelectionWidget::onRefreshClicked()
 {
-	QVector<QString> active;
 	ipController_->refreshActiveIPsOnLan();
 }
 
 void IPSelectionWidget::onItemPressed(QListWidgetItem* item)
 {
-	qDebug() << "onItemPressed" << '\n';
+	//qDebug() << "onItemPressed" << '\n';
 	previousSelectedItems_ = selectedIpItems_;
 	selectedIpItems_.clear();
 	for (int i = 0; i < ipList_->count(); i++)
@@ -167,20 +178,20 @@ void IPSelectionWidget::onItemPressed(QListWidgetItem* item)
 }
 void IPSelectionWidget::onItemActivated(QListWidgetItem* item)
 {
-	qDebug() << "onItemActivated" << '\n';
+	//qDebug() << "onItemActivated" << '\n';
 }
 void IPSelectionWidget::onItemChanged(QListWidgetItem* item)
 {
-	qDebug() << "onItemChanged" << '\n';
+	//qDebug() << "onItemChanged" << '\n';
 }
 void IPSelectionWidget::currentItemChanged(QListWidgetItem* item, QListWidgetItem* previous)
 {
-	qDebug() << "currentItemChanged" << '\n';
+	//qDebug() << "currentItemChanged" << '\n';
 }
 
 void IPSelectionWidget::itemSelectionChanged()
 {
-	qDebug() << "itemSelectionChanged" << '\n';
+	//qDebug() << "itemSelectionChanged" << '\n';
 }
 
 void IPSelectionWidget::toggleCheckState(QListWidgetItem* item)
@@ -192,14 +203,6 @@ void IPSelectionWidget::toggleCheckState(QListWidgetItem* item)
 }
 
 
-void IPSelectionWidget::onIPsRefreshed(const QSet<QString>& ips)
-{
-	ipList_->clear();
-	foreach (auto ip, ips)
-	{
-		addAddress(ip);
-	}
-}
 
 void IPSelectionWidget::onIpAdd(const QString& ip)
 {
@@ -213,7 +216,7 @@ void IPSelectionWidget::onIpDelete(const QString& ip)
 
 void IPSelectionWidget::onIpClicked(QListWidgetItem * currentItem)
 {
-	qDebug() << "onIpClicked" << '\n';
+	//qDebug() << "onIpClicked" << '\n';
 
 	auto selectedItems = selectedIpItems_;
 

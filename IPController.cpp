@@ -11,7 +11,7 @@ QMutex activeIpsMutex;
 void IPController::onIpActive(const QString& ip)
 {
 	QMutexLocker locker(&activeIpsMutex);
-	qDebug() << ip;
+	//qDebug() << ip;
 	activeIPs_.insert(ip);
 }
 
@@ -19,11 +19,14 @@ QMutex unavailableIpsMutex;
 void IPController::onIpUnavailable(const QString& ip)
 {
 	QMutexLocker locker(&unavailableIpsMutex);
-	qDebug() << "IpUnavailable" << ip;
+	//qDebug() << "IpUnavailable" << ip;
 }
 
 void IPController::refreshActiveIPsOnLan()
 {
+	if (isIpsRefreshing_)
+		return;
+	isIpsRefreshing_ = true;
 	QString baseNetowrk = "192.9.206.";
 	for (int i = 0; i < hostsCount_; i++)
 	{
@@ -38,7 +41,7 @@ void IPController::refreshActiveIPsOnLan()
 		connect(pingExecutor, SIGNAL(finished()), pingExecutor, SLOT(deleteLater()));
 		connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 		connect(pingExecutor, SIGNAL(pingSucceded(const QString&)), this, SLOT(onIpActive(const QString&)));
-		connect(pingExecutor, SIGNAL(pingSucceded(const QString&)), this, SLOT(onIpUnavailable(const QString&)));
+		//connect(pingExecutor, SIGNAL(pingSucceded(const QString&)), this, SLOT(onIpUnavailable(const QString&)));
 		thread->start();	
 	}
 	
@@ -49,7 +52,9 @@ void IPController::onPingFinished()
 	executedPingsCounter_.fetch_add(1);
 	if (executedPingsCounter_.load() == hostsCount_)
 	{
+		//qDebug() << "THREAD onPingFinished: " << QThread::currentThread()->currentThreadId();
 		emit activeIpsRefreshed(activeIPs_);
 		executedPingsCounter_.store(0);
+		isIpsRefreshing_ = false;
 	}
 }

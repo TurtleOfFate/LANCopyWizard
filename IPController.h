@@ -26,6 +26,7 @@ signals:
 	
 private:
 	QSet<QString> activeIPs_;
+	bool isIpsRefreshing_ = false;
 	int refreshedIpsCount = 0;
 	std::atomic<int> executedPingsCounter_ = 0;
 	const int hostsCount_ = 255;
