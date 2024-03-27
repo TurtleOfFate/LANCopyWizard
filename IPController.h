@@ -14,7 +14,7 @@ public:
 
 	QSet<QString> getActiveIPs() const
 	{ 
-		return activeIPs_; 
+		return activeIps_; 
 	};
 
 public slots:
@@ -22,10 +22,10 @@ public slots:
 	void onIpUnavailable(const QString& ip);
 	void onPingFinished();
 signals:
-	void activeIpsRefreshed(QSet<QString> activeIPs);
+	void activeIpsRefreshed(const QList<QString> &activeIPs);
 	
 private:
-	QSet<QString> activeIPs_;
+	QSet<QString> activeIps_;
 	bool isIpsRefreshing_ = false;
 	int refreshedIpsCount = 0;
 	std::atomic<int> executedPingsCounter_ = 0;

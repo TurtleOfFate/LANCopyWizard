@@ -5,7 +5,6 @@
 #include <QPushButton>
 #include <unordered_set>
 
-class IPAddress;
 class QListWidgetItem;
 class QHostInfo;
 class IPController;
@@ -19,10 +18,6 @@ public:
 	void removeAddress(const QString& ip);
 private:
 	void createConnections();
-
-	void setAddresses(const QVector<IPAddress>& addresses);
-
-	
 private:
 	QListWidget *ipList_;
 	QPushButton *refresh_;
@@ -35,7 +30,7 @@ private:
 private slots:
 	void onRefreshClicked();
 
-	void onIPsRefreshed(const QSet<QString>& ips);
+	void onIPsRefreshed(const QList<QString>& ips);
 
 	void onIpAdd(const QString& ip);
 

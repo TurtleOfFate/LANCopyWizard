@@ -10,8 +10,6 @@ void PingExecutor::ping()
 #else
     process_->start("ping", QStringList() << "-n" << "1" << ip_);
 #endif
-    process_->waitForFinished(10000);
-    emit finished();
 }
 
 PingExecutor::PingExecutor(const QString& ip, QObject* parent) : QObject(parent)
@@ -20,10 +18,8 @@ PingExecutor::PingExecutor(const QString& ip, QObject* parent) : QObject(parent)
     process_ = new QProcess(this);
 }
 
-QMutex messageMutex;
 void PingExecutor::onPingEnded()
 {
-    QMutexLocker locker(&messageMutex);
     QByteArray output = process_->readAllStandardOutput();
     if (!output.isEmpty())
     {  
@@ -35,7 +31,7 @@ void PingExecutor::onPingEnded()
         {
             emit pingFailed(ip_);
         }     
-       // qDebug() << "THREAD PingExecutor::onPingEnded: " << QThread::currentThread()->currentThreadId();
     }
+    emit finished();
 }
 

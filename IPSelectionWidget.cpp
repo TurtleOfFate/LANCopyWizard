@@ -29,7 +29,6 @@ IPSelectionWidget::IPSelectionWidget(IPController* controller,QWidget* parent) :
 
 	createConnections();
 	controller->refreshActiveIPsOnLan();
-
 }
 
 void IPSelectionWidget::addAddress(const QString& ip)
@@ -41,7 +40,7 @@ void IPSelectionWidget::addAddress(const QString& ip)
 	item->setData(Qt::DisplayRole, QObject::tr(ip.toUtf8()));
 }
 
-void IPSelectionWidget::onIPsRefreshed(const QSet<QString>& ips)
+void IPSelectionWidget::onIPsRefreshed(const QList<QString>& ips)
 {
 	qDebug() << "THREAD onIPsRefreshed: " << QThread::currentThread()->currentThreadId();
 	ipList_->clear();
@@ -66,7 +65,7 @@ void IPSelectionWidget::createConnections()
 {
 	QObject::connect(refresh_, SIGNAL(clicked()), this, SLOT(onRefreshClicked()));
 	
-	QObject::connect(ipController_, SIGNAL(activeIpsRefreshed(const QSet<QString>&)), this, SLOT(onIPsRefreshed(const QSet<QString>&)));
+	QObject::connect(ipController_, SIGNAL(activeIpsRefreshed(const QList<QString>&)), this, SLOT(onIPsRefreshed(const QList<QString>&)));
 	QObject::connect(ipList_, SIGNAL(itemPressed(QListWidgetItem*)), this, SLOT(onItemPressed(QListWidgetItem*)));
 	QObject::connect(ipList_, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(onItemActivated(QListWidgetItem*)));
 	QObject::connect(ipList_, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(onItemChanged(QListWidgetItem*)));
@@ -75,10 +74,6 @@ void IPSelectionWidget::createConnections()
 	QObject::connect(ipList_, SIGNAL(itemSelectionChanged()), this, SLOT(itemSelectionChanged()));
 }
 
-void IPSelectionWidget::setAddresses(const QVector<IPAddress>& addresses)
-{
-	ipController_->getActiveIPs();
-}
 
 void IPSelectionWidget::onRefreshClicked()
 {

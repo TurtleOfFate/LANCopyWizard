@@ -12,7 +12,7 @@ void IPController::onIpActive(const QString& ip)
 {
 	QMutexLocker locker(&activeIpsMutex);
 	//qDebug() << ip;
-	activeIPs_.insert(ip);
+	activeIps_.insert(ip);
 }
 
 QMutex unavailableIpsMutex;
@@ -41,10 +41,9 @@ void IPController::refreshActiveIPsOnLan()
 		connect(pingExecutor, SIGNAL(finished()), pingExecutor, SLOT(deleteLater()));
 		connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 		connect(pingExecutor, SIGNAL(pingSucceded(const QString&)), this, SLOT(onIpActive(const QString&)));
-		//connect(pingExecutor, SIGNAL(pingSucceded(const QString&)), this, SLOT(onIpUnavailable(const QString&)));
+		//connect(pingExecutor, SIGNAL(pingFailed(const QString&)), this, SLOT(onIpUnavailable(const QString&)));
 		thread->start();	
-	}
-	
+	}	
 }
 
 void IPController::onPingFinished()
@@ -53,7 +52,20 @@ void IPController::onPingFinished()
 	if (executedPingsCounter_.load() == hostsCount_)
 	{
 		//qDebug() << "THREAD onPingFinished: " << QThread::currentThread()->currentThreadId();
-		emit activeIpsRefreshed(activeIPs_);
+		QList<QString> values = activeIps_.values();
+		auto hostsComparator = [](const QString& lhs, const QString& rhs)
+		{
+			QStringList lhsIp = lhs.split(".");
+			QStringList rhsIp = rhs.split(".");
+			int lhsIpHostAddress = lhsIp[3].toInt();
+			int rhsIpHostAddress = rhsIp[3].toInt();
+			if (lhsIpHostAddress < rhsIpHostAddress)
+				return true;
+			return false;
+		};
+		qSort(values.begin(),values.end(), hostsComparator);
+
+		emit activeIpsRefreshed(values);
 		executedPingsCounter_.store(0);
 		isIpsRefreshing_ = false;
 	}
