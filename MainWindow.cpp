@@ -2,18 +2,15 @@
 #include <QtWidgets>
 #include "IPSelectionWidget.h"
 #include "PathSelectionWidget.h"
-#include "IPAddress.h"
 
+#include "IPController.h"
 
 
 MainWindow::MainWindow(QWidget* parent)
 {
-	this->resize(600, 400);
-	QVector<IPAddress> addresses;
-	addresses.append(IPAddress("192.9.200.6"));
-	addresses.append(IPAddress("192.9.200.7"));
-	addresses.append(IPAddress());
-	IPSelectionWidget* ipWidget = new IPSelectionWidget(addresses,this);
+	this->resize(1000, 600);
+	IPController* ipController_ = new IPController(this);
+	IPSelectionWidget* ipWidget = new IPSelectionWidget(ipController_,this);
 	ipWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 	ipWidget->setMinimumSize(10, this->height());
 

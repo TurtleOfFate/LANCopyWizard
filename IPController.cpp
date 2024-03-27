@@ -20,7 +20,6 @@ void IPController::onIpUnavailable(const QString& ip)
 {
 	QMutexLocker locker(&unavailableIpsMutex);
 	qDebug() << "IpUnavailable" << ip;
-	//activeIPs_.insert(ip);
 }
 
 void IPController::refreshActiveIPsOnLan()

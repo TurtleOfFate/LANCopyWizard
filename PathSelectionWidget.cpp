@@ -1,6 +1,5 @@
 #include "PathSelectionWidget.h"
 #include <qlistwidget.h>
-#include "IPAddress.h"
 #include <qdebug.h>
 #include <QSignalMapper>
 #include "PathRowWidget.h"

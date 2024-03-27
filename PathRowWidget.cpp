@@ -1,7 +1,6 @@
 #pragma once
 #include "PathRowWidget.h"
 #include <qlistwidget.h>
-#include "IPAddress.h"
 #include <qdebug.h>
 #include <QSignalMapper>
 #include <QLineEdit>

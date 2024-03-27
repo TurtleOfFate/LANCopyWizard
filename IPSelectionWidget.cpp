@@ -1,6 +1,5 @@
 ﻿#include "IPSelectionWidget.h"
 #include <qlistwidget.h>
-#include "IPAddress.h"
 #include <qdebug.h>
 #include <QSignalMapper>
 #include <QHostInfo>
@@ -10,9 +9,9 @@
 #include "IPController.h"
 #include <QString>
 
-IPSelectionWidget::IPSelectionWidget(const QVector<IPAddress> &addresses,QWidget* parent) : QWidget(parent)
+IPSelectionWidget::IPSelectionWidget(IPController* controller,QWidget* parent) : QWidget(parent)
 {
-	ipController_ = new IPController(this);
+	ipController_ = controller;
 	ipList_ = new QListWidget(this);
 	refresh_ = new QPushButton("Refresh", this);
 	CopyToSelected = new QPushButton("Send", this);
@@ -25,20 +24,10 @@ IPSelectionWidget::IPSelectionWidget(const QVector<IPAddress> &addresses,QWidget
 	ipList_->setSelectionBehavior(QAbstractItemView::SelectItems);
 	ipList_->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	
-	for (int i = 0; i < addresses.size(); i++)
-	{
-		const IPAddress &address = addresses[i];
-		QListWidgetItem* item = new QListWidgetItem(ipList_);
-
-		item->setFlags(item->flags() & (~Qt::ItemIsUserCheckable));
-		item->setCheckState(Qt::CheckState::Unchecked);
-		//item->setData(Qt::ItemDataRole::ToolTipRole, QObject::tr("I'm TOOLTIP %1").arg(i));
-		item->setData(Qt::DisplayRole, QObject::tr(address.getAddress().toUtf8()));
-	}
 	this->setLayout(parentLayout_);	
-	
 
 	createConnections();
+	controller->refreshActiveIPsOnLan();
 }
 
 void IPSelectionWidget::addAddress(const QString& ip)
@@ -77,8 +66,6 @@ void IPSelectionWidget::createConnections()
 void IPSelectionWidget::setAddresses(const QVector<IPAddress>& addresses)
 {
 	ipController_->getActiveIPs();
-	
-	//ip
 }
 
 void IPSelectionWidget::onRefreshClicked()

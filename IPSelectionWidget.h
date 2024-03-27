@@ -14,7 +14,7 @@ class IPSelectionWidget : public QWidget
 	Q_OBJECT
 
 public:
-	IPSelectionWidget(const QVector<IPAddress> &addresses, QWidget* parent = nullptr);
+	IPSelectionWidget(IPController* controller, QWidget* parent = nullptr);
 	void addAddress(const QString& ip);
 	void removeAddress(const QString& ip);
 private:
