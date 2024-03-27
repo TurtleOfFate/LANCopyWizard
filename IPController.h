@@ -19,9 +19,10 @@ public:
 
 public slots:
 	void onIpActive(const QString& ip);
+	void onIpUnavailable(const QString& ip);
 	void onPingFinished();
 signals:
-	void activeIpsRefreshed(QVector<QString> activeIPs);
+	void activeIpsRefreshed(QSet<QString> activeIPs);
 	
 private:
 	QSet<QString> activeIPs_;

@@ -27,16 +27,13 @@ void PingExecutor::onPingEnded()
     QMutexLocker locker(&messageMutex);
     QByteArray output = process_->readAllStandardOutput();
     if (!output.isEmpty())
-    {
-       // qDebug() << output;
+    {  
         if (-1 != QString(output).indexOf("ttl", 0, Qt::CaseInsensitive))
         {
-            //qDebug() << "PING OK" << ip_;
             emit pingSucceded(ip_);
         }
         else
         {
-            //qDebug() << "NO PING" << ip_;;
             emit pingFailed(ip_);
         }         
     }

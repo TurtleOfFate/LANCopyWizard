@@ -50,6 +50,7 @@ void IPSelectionWidget::addAddress(const QString& ip)
 	item->setData(Qt::DisplayRole, QObject::tr(ip.toUtf8()));
 }
 
+
 void IPSelectionWidget::removeAddress(const QString& ip)
 {
 	for (int i = 0; i < ipList_->count(); i++)
@@ -64,7 +65,7 @@ void IPSelectionWidget::createConnections()
 {
 	QObject::connect(refresh_, SIGNAL(clicked()), this, SLOT(onRefreshClicked()));
 	
-	QObject::connect(ipController_, SIGNAL(activeIpsRefreshed(const QVector<QString>&)), this, SLOT(onIPsRefreshed(const QVector<QString>&)));
+	QObject::connect(ipController_, SIGNAL(activeIpsRefreshed(const QSet<QString>&)), this, SLOT(onIPsRefreshed(const QSet<QString>&)));
 	QObject::connect(ipList_, SIGNAL(itemPressed(QListWidgetItem*)), this, SLOT(onItemPressed(QListWidgetItem*)));
 	QObject::connect(ipList_, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(onItemActivated(QListWidgetItem*)));
 	QObject::connect(ipList_, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(onItemChanged(QListWidgetItem*)));
@@ -203,13 +204,24 @@ void IPSelectionWidget::toggleCheckState(QListWidgetItem* item)
 		item->setCheckState(Qt::Unchecked);
 }
 
-void IPSelectionWidget::onIPsRefreshed(const QVector<QString>& ips)
+
+void IPSelectionWidget::onIPsRefreshed(const QSet<QString>& ips)
 {
 	ipList_->clear();
-	for (int i = 0; i < ips.count(); i++)
+	foreach (auto ip, ips)
 	{
-		addAddress(ips[i]);
+		addAddress(ip);
 	}
+}
+
+void IPSelectionWidget::onIpAdd(const QString& ip)
+{
+	addAddress(ip);
+}
+
+void IPSelectionWidget::onIpDelete(const QString& ip)
+{
+	removeAddress(ip);
 }
 
 void IPSelectionWidget::onIpClicked(QListWidgetItem * currentItem)

@@ -35,7 +35,11 @@ private:
 private slots:
 	void onRefreshClicked();
 
-	void onIPsRefreshed(const QVector<QString>& ips);
+	void onIPsRefreshed(const QSet<QString>& ips);
+
+	void onIpAdd(const QString& ip);
+
+	void onIpDelete(const QString& ip);
 
 	void onIpClicked(QListWidgetItem * currentItem);
 
