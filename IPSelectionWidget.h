@@ -38,6 +38,8 @@ private slots:
 
 	void onIpClicked(QListWidgetItem * currentItem);
 
+	void onSendClicked();
+
 	void onXCopyEnded();
 
 	void onItemPressed(QListWidgetItem* item);
@@ -49,5 +51,7 @@ private slots:
 	void currentItemChanged(QListWidgetItem* item, QListWidgetItem* previous);
 
 	void itemSelectionChanged();
+signals:
+	void ipForSend(const QString& ip);
 };
 

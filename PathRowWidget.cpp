@@ -25,9 +25,13 @@ void PathRowWidget::createFileDialog()
 		{
 			QFileInfo info(str);
 			if (info.isFile())
+			{
 				fileDialog_->setFileMode(QFileDialog::ExistingFile);
+			}
 			else if (info.isDir())
+			{
 				fileDialog_->setFileMode(QFileDialog::Directory);
+			}
 		});
 
 	fileDialog_->setOption(QFileDialog::DontUseNativeDialog);
@@ -78,6 +82,7 @@ void PathRowWidget::onChooseFileFinished(int result)
 	if (files.empty())
 		return;
 	QString chosenPath = files[0];
+	if (currentEditPath_ == pathFrom_)
 	currentEditPath_->setText(chosenPath);
 	currentEditPath_->setToolTip(chosenPath);
 }

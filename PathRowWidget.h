@@ -30,6 +30,7 @@ private:
 	QSpacerItem* pathSpacer_;
 	QHBoxLayout* rowLayout_;
 
+
 private slots:
 
 	void onChooseFileBrowse(QLineEdit* chosenEditPath);
