@@ -27,7 +27,7 @@ void IPController::refreshActiveIPsOnLan()
 	if (isIpsRefreshing_)
 		return;
 	isIpsRefreshing_ = true;
-	QString baseNetowrk = "192.9.206.";
+	QString baseNetowrk = "192.168.0.";//192.9.206.";
 	for (int i = 0; i < hostsCount_; i++)
 	{
 		QString currIp(baseNetowrk + QString::number(i));
@@ -66,6 +66,7 @@ void IPController::onPingFinished()
 		qSort(values.begin(),values.end(), hostsComparator);
 
 		emit activeIpsRefreshed(values);
+		activeIps_.clear();
 		executedPingsCounter_.store(0);
 		isIpsRefreshing_ = false;
 	}
