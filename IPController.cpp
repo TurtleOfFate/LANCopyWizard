@@ -7,7 +7,7 @@ IPController::IPController(QObject* parent) : QObject(parent)
 
 }
 
-QMutex activeIpsMutex;
+static QMutex activeIpsMutex;
 void IPController::onIpActive(const QString& ip)
 {
 	QMutexLocker locker(&activeIpsMutex);
@@ -15,7 +15,7 @@ void IPController::onIpActive(const QString& ip)
 	activeIps_.insert(ip);
 }
 
-QMutex unavailableIpsMutex;
+static QMutex unavailableIpsMutex;
 void IPController::onIpUnavailable(const QString& ip)
 {
 	QMutexLocker locker(&unavailableIpsMutex);
