@@ -4,6 +4,7 @@
 #include <QGridLayout>
 #include <QSplitter>
 
+
 class MainWindow  : public QWidget
 {
 	Q_OBJECT

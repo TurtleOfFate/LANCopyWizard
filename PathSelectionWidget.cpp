@@ -5,11 +5,14 @@
 #include "PathRowWidget.h"
 #include <QLabel>
 #include <QHBoxLayout>
+#include "LanSender.h"
 
-PathSelectionWidget::PathSelectionWidget(QWidget* parent) : QWidget(parent)
+PathSelectionWidget::PathSelectionWidget(LanSender* sender, QWidget* parent) : QWidget(parent)
 {
-	parentLayout_ = new QVBoxLayout(this);
+	this->sender = sender;
 
+	parentLayout_ = new QVBoxLayout(this);
+	
 	QHBoxLayout* labelLayout = new QHBoxLayout();
 	QLabel* labelFrom = new QLabel("    Copy from", this);
 	QLabel* labelTo = new QLabel("  Copy to", this);
@@ -37,7 +40,7 @@ PathSelectionWidget::PathSelectionWidget(QWidget* parent) : QWidget(parent)
 
 void PathSelectionWidget::addToList(QListWidget *list)
 {
-	pathRows_.push_back(new PathRowWidget(this)); 
+	pathRows_.push_back(new PathRowWidget(pathRows_.size(), sender, this));
 	auto newRow = pathRows_.back();
 
 	QListWidgetItem* item = new QListWidgetItem(list);

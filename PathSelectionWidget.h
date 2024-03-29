@@ -9,19 +9,22 @@
 class IPAddress;
 class QListWidgetItem;
 class PathRowWidget;
+class LanSender;
 
 class PathSelectionWidget : public QWidget
 {
 	Q_OBJECT
 
 public:
-	PathSelectionWidget(QWidget* parent = nullptr);
+	PathSelectionWidget(LanSender* sender, QWidget* parent = nullptr);
 private:
 	QListWidget* pathList_;
 	QPushButton* deletePath_;
 	QPushButton* addPath_;
 	QVBoxLayout* parentLayout_;
  	QVector<PathRowWidget*> pathRows_;
+
+	LanSender* sender;
 
 	void createConnections();
 	void deleteSelectedFromList(QListWidget* list);

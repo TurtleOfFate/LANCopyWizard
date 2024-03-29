@@ -8,9 +8,11 @@
 #include "PingExecutor.h"
 #include "IPController.h"
 #include <QString>
+#include "LanSender.h"
 
-IPSelectionWidget::IPSelectionWidget(IPController* controller,QWidget* parent) : QWidget(parent)
+IPSelectionWidget::IPSelectionWidget(LanSender* sender,IPController* controller,QWidget* parent) : QWidget(parent)
 {
+	this->sender = sender;
 	qDebug() << "MAIN THREAD " << QThread::currentThread()->currentThreadId();
 	ipController_ = controller;
 	ipList_ = new QListWidget(this);
@@ -64,7 +66,7 @@ void IPSelectionWidget::removeAddress(const QString& ip)
 void IPSelectionWidget::createConnections()
 {
 	QObject::connect(refresh_, SIGNAL(clicked()), this, SLOT(onRefreshClicked()));
-	QObject::connect(CopyToSelected, SIGNAL(clicked()), this, SLOT(onRefreshClicked()));
+	QObject::connect(CopyToSelected, SIGNAL(clicked()), this, SLOT(onSendClicked()));
 
 	QObject::connect(ipController_, SIGNAL(activeIpsRefreshed(const QList<QString>&)), this, SLOT(onIPsRefreshed(const QList<QString>&)));
 	QObject::connect(ipList_, SIGNAL(itemPressed(QListWidgetItem*)), this, SLOT(onItemPressed(QListWidgetItem*)));
@@ -87,7 +89,8 @@ void IPSelectionWidget::onSendClicked()
 		auto item = ipList_->item(i);
 		if (item->checkState() == Qt::Checked)
 		{
-			emit ipForSend(item->text());
+			sender->PushIpToSend(item->text());
+			//emit ipForSend(item->text());
 			//proc = new QProcess(this);
 			//QObject::connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(onXCopyEnded()));
 			//auto command = QStringList() << "c:\\hehe.txt" << R"(\\)""192.9.206.59\\c\\Soft" << "/y";

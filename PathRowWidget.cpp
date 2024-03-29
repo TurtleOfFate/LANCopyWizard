@@ -9,9 +9,12 @@
 #include <QLabel>
 #include <QWidget>
 #include <QAction>
+#include "LanSender.h"
 
-PathRowWidget::PathRowWidget(QWidget* parent) : QWidget(parent)
+PathRowWidget::PathRowWidget(int num , LanSender* sender, QWidget* parent) : QWidget(parent)
 {
+	rowNumber = num;
+	this->sender = sender;
 	createFileDialog();
 	createEditPaths();
 	createRowLayout();
@@ -51,10 +54,13 @@ void PathRowWidget::createEditPaths()
 
 	QAction* onPathFromFolderBrowseClicked = pathFrom_->addAction(browseFolderIcon, QLineEdit::ActionPosition::TrailingPosition);
 	connect(onPathFromFolderBrowseClicked, &QAction::triggered, this, std::bind(&PathRowWidget::onChooseFileBrowse, this, pathFrom_));
+	connect(pathFrom_, SIGNAL(textChanged(const QString&)), SLOT(onPushFromPathToSender(const QString&)));
 
 	QAction* onPathToFolderBrowseClicked = pathTo_->addAction(browseFolderIcon, QLineEdit::ActionPosition::TrailingPosition);
 	connect(onPathToFolderBrowseClicked, &QAction::triggered, this, std::bind(&PathRowWidget::onChooseFileBrowse, this, pathTo_));
+	connect(pathTo_, SIGNAL(textChanged(const QString&)), SLOT(onPushToPathToSender(const QString&)));
 }
+
 
 
 void PathRowWidget::createRowLayout()
@@ -87,3 +93,11 @@ void PathRowWidget::onChooseFileFinished(int result)
 	currentEditPath_->setToolTip(chosenPath);
 }
 
+void PathRowWidget::onPushFromPathToSender(const QString& from)
+{
+	sender->PushFromPathToSend(from, rowNumber);
+}
+void PathRowWidget::onPushToPathToSender(const QString& to)
+{
+	sender->PushToPathToSend(to, rowNumber);
+}

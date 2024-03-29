@@ -2,19 +2,20 @@
 #include <QtWidgets>
 #include "IPSelectionWidget.h"
 #include "PathSelectionWidget.h"
-
+#include "LanSender.h"
 #include "IPController.h"
 
 
 MainWindow::MainWindow(QWidget* parent)
 {
 	this->resize(1000, 600);
+	LanSender* sender = new LanSender(this);
 	IPController* ipController_ = new IPController(this);
-	IPSelectionWidget* ipWidget = new IPSelectionWidget(ipController_,this);
+	IPSelectionWidget* ipWidget = new IPSelectionWidget(sender, ipController_,this);
 	ipWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 	ipWidget->setMinimumSize(10, this->height());
 
-	PathSelectionWidget* pathWidget = new PathSelectionWidget(this);
+	PathSelectionWidget* pathWidget = new PathSelectionWidget(sender, this);
 	pathWidget->resize(500, this->height());
 	pathWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 

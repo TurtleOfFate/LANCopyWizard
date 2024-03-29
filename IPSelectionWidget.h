@@ -4,6 +4,8 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QProcess>
+
+class LanSender;
 class QListWidgetItem;
 class QHostInfo;
 class IPController;
@@ -12,7 +14,7 @@ class IPSelectionWidget : public QWidget
 	Q_OBJECT
 
 public:
-	IPSelectionWidget(IPController* controller, QWidget* parent = nullptr);
+	IPSelectionWidget(LanSender* sender, IPController* controller, QWidget* parent = nullptr);
 	void addAddress(const QString& ip);
 	void removeAddress(const QString& ip);
 private:
@@ -27,6 +29,7 @@ private:
 	QSet<QListWidgetItem*> selectedIpItems_;
 	IPController* ipController_;
 	QProcess* proc;
+	LanSender* sender;
 private slots:
 	void onRefreshClicked();
 
