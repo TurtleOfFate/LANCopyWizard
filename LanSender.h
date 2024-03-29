@@ -14,8 +14,12 @@ public:
 	void PushIpToSend(QString ip_);
 	void PushToPathToSend(QString pathTo, int rowNumber);
 	void PushFromPathToSend(QString pathFrom, int rowNumber);
+	void onSendDataToXcopy(void);
 private:
 	QMap<int, QPair<QString, QString>> pairsOfPaths; //first - from second - to
 	QVector<QString> ips;
+private slots:
+
+
 };
 

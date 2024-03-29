@@ -97,6 +97,7 @@ void IPSelectionWidget::onSendClicked()
 			//proc->start("xcopy", command);//QStringList() << "-n" << "1" << ip_
 		}
 	}
+	sender->onSendDataToXcopy();
 }
 
 void IPSelectionWidget::onXCopyEnded()
