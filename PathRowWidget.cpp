@@ -88,7 +88,6 @@ void PathRowWidget::onChooseFileFinished(int result)
 	if (files.empty())
 		return;
 	QString chosenPath = files[0];
-	if (currentEditPath_ == pathFrom_)
 	currentEditPath_->setText(chosenPath);
 	currentEditPath_->setToolTip(chosenPath);
 }
