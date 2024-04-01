@@ -11,7 +11,13 @@ XcopyExecutor::XcopyExecutor(QString& ip, QPair<QString, QString>& pathPair, QOb
 
 void XcopyExecutor::parsePathToValidForm()
 {
-
+	pairOfPath.first.replace('/', '\\');
+	pairOfPath.second.replace('/', '\\');
+	pairOfPath.second.replace(':', '\\');
+	auto firstDiskToLower = pairOfPath.first.front().toLower();
+	auto secondDiskToLower = pairOfPath.second.front().toLower();
+	pairOfPath.first[0] = firstDiskToLower;
+	pairOfPath.second[0] = secondDiskToLower;
 }
 
 void XcopyExecutor::xcopy()
@@ -21,21 +27,6 @@ QStringList arguments;
 QString program;
 QString::iterator it;
 
-pairOfPath.first.replace('/', '\\');
-pairOfPath.second.replace('/', '\\');
-pairOfPath.second.replace(':', '\\');
-//while ((it = qFind(pairOfPath.first.begin(), pairOfPath.first.end(), "/")) != pairOfPath.first.end())
-//	{
-//		*it = '\\';
-//	}
-//while ((it = qFind(pairOfPath.second.begin(), pairOfPath.first.end(), "/")) != pairOfPath.second.end())
-//	{
-//	*it = '\\';
-//	}
-//if ((it = qFind(pairOfPath.second.begin(), pairOfPath.first.end(), "/")) != pairOfPath.second.end())
-//	{
-//	*it = ':';
-//	}
 
 	if (pairOfPath.first.end() != qFind(pairOfPath.first.begin(), pairOfPath.first.end(), "."))
 	{
