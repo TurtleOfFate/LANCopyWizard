@@ -2,6 +2,7 @@
 #include <qwidget.h>
 #include <QListWidget>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QPushButton>
 #include <QProcess>
 
@@ -24,6 +25,13 @@ private:
 	QPushButton *refresh_;
 	QPushButton *CopyToSelected;
 	QVBoxLayout *parentLayout_;
+
+	QHBoxLayout *baseIpLayout_;
+	QLineEdit *firstBaseIp;
+	QLineEdit *secondBaseIp;
+	QLineEdit *thirdBaseIp;
+	QString baseIp = "..";
+
 	void toggleCheckState(QListWidgetItem* item);
 	QSet<QListWidgetItem*> previousSelectedItems_;
 	QSet<QListWidgetItem*> selectedIpItems_;
@@ -31,6 +39,9 @@ private:
 	QProcess* proc;
 	LanSender* sender;
 private slots:
+
+	void onPushBaseIp(const QString& ip, int number);
+
 	void onRefreshClicked();
 
 	void onIPsRefreshed(const QList<QString>& ips);

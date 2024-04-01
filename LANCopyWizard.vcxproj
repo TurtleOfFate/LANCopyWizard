@@ -37,7 +37,7 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>5.12.12_msvc2017_64</QtInstall>
+    <QtInstall>msvc2017_64</QtInstall>
     <QtModules>core;gui;network;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
     <QtHeaderSearchPath>include</QtHeaderSearchPath>
@@ -93,10 +93,12 @@
   <ItemGroup>
     <ClCompile Include="IPController.cpp" />
     <ClCompile Include="IPSelectionWidget.cpp" />
+    <ClCompile Include="LanSender.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="PathRowWidget.cpp" />
     <ClCompile Include="PathSelectionWidget.cpp" />
     <ClCompile Include="PingExecutor.cpp" />
+    <ClCompile Include="XcopyExecutor.cpp" />
     <QtRcc Include="LANCopyWizard.qrc" />
     <QtUic Include="LANCopyWizard.ui" />
     <QtMoc Include="LANCopyWizard.h" />
@@ -112,10 +114,19 @@
     <QtMoc Include="IPSelectionWidget.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="PingExecutor.h" />
-    <QtMoc Include="PathSelectionWidget.h" />
-    <QtMoc Include="PathRowWidget.h" />
     <QtMoc Include="IPController.h" />
+    <QtMoc Include="PingExecutor.h" />
+    <QtMoc Include="PathRowWidget.h" />
+    <QtMoc Include="PathSelectionWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="LanSender.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="XcopyExecutor.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Profiler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

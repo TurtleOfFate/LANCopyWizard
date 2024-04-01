@@ -22,7 +22,7 @@ void IPController::onIpUnavailable(const QString& ip)
 	//qDebug() << "IpUnavailable" << ip;
 }
 
-void IPController::refreshActiveIPsOnLan()
+void IPController::refreshActiveIPsOnLan(const QString& baseIP)
 {
 	if (isIpsRefreshing_)
 		return;
@@ -52,18 +52,27 @@ void IPController::onPingFinished()
 	if (executedPingsCounter_.load() == hostsCount_)
 	{
 		//qDebug() << "THREAD onPingFinished: " << QThread::currentThread()->currentThreadId();
-		QList<QString> values = activeIps_.values();
-		auto hostsComparator = [](const QString& lhs, const QString& rhs)
+		QList<QString> values;
+		if (!activeIps_.empty())
 		{
-			QStringList lhsIp = lhs.split(".");
-			QStringList rhsIp = rhs.split(".");
-			int lhsIpHostAddress = lhsIp[3].toInt();
-			int rhsIpHostAddress = rhsIp[3].toInt();
-			if (lhsIpHostAddress < rhsIpHostAddress)
-				return true;
-			return false;
-		};
-		qSort(values.begin(),values.end(), hostsComparator);
+			values = activeIps_.values();
+			auto hostsComparator = [](const QString& lhs, const QString& rhs)
+				{
+					QStringList lhsIp = lhs.split(".");
+					QStringList rhsIp = rhs.split(".");
+					int lhsIpHostAddress = lhsIp[3].toInt();
+					int rhsIpHostAddress = rhsIp[3].toInt();
+					if (lhsIpHostAddress < rhsIpHostAddress)
+						return true;
+					return false;
+				};
+			qSort(values.begin(), values.end(), hostsComparator);
+		}
+		else
+		{
+			values.push_back("Cant ping at least one of ip adress in selected network.");
+			values.push_back("Please check that the input is correct, or lan network connection");
+		}
 
 		emit activeIpsRefreshed(values);
 		activeIps_.clear();

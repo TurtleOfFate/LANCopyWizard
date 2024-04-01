@@ -10,7 +10,7 @@ class IPController : public QObject
 	Q_OBJECT
 public:
 	IPController(QObject* parent = nullptr);
-	void refreshActiveIPsOnLan();
+	void refreshActiveIPsOnLan(const QString& baseIP );
 
 	QSet<QString> getActiveIPs() const
 	{ 

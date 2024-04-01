@@ -8,6 +8,7 @@
 #include "PingExecutor.h"
 #include "IPController.h"
 #include <QString>
+#include <QLineEdit>
 #include "LanSender.h"
 
 IPSelectionWidget::IPSelectionWidget(LanSender* sender,IPController* controller,QWidget* parent) : QWidget(parent)
@@ -18,8 +19,20 @@ IPSelectionWidget::IPSelectionWidget(LanSender* sender,IPController* controller,
 	ipList_ = new QListWidget(this);
 	refresh_ = new QPushButton("Refresh", this);
 	CopyToSelected = new QPushButton("Send", this);
+	QWidget* baseIpWidget = new QWidget(this);
+
+	baseIpLayout_ = new QHBoxLayout(this);
+	firstBaseIp = new QLineEdit(this);
+	secondBaseIp = new QLineEdit(this);
+	thirdBaseIp = new QLineEdit(this);
+
+	baseIpLayout_->addWidget(firstBaseIp);
+	baseIpLayout_->addWidget(secondBaseIp);
+	baseIpLayout_->addWidget(thirdBaseIp);
+	baseIpWidget->setLayout(baseIpLayout_);
 
 	parentLayout_ = new QVBoxLayout(this);
+	parentLayout_->addWidget(baseIpWidget);
 	parentLayout_->addWidget(ipList_);
 	parentLayout_->addWidget(refresh_);
 	parentLayout_->addWidget(CopyToSelected);
@@ -30,7 +43,7 @@ IPSelectionWidget::IPSelectionWidget(LanSender* sender,IPController* controller,
 	this->setLayout(parentLayout_);	
 
 	createConnections();
-	controller->refreshActiveIPsOnLan();
+	controller->refreshActiveIPsOnLan(baseIp);
 }
 
 void IPSelectionWidget::addAddress(const QString& ip)
@@ -65,6 +78,10 @@ void IPSelectionWidget::removeAddress(const QString& ip)
 
 void IPSelectionWidget::createConnections()
 {
+	//connect(firstBaseIp, &QLineEdit::textChanged, this, std::bind(&IPSelectionWidget::onPushBaseIp, this, 1));
+	connect(secondBaseIp, SIGNAL(textChanged(const QString&)), SLOT(onPushFromPathToSender(const QString&)));
+	connect(thirdBaseIp, SIGNAL(textChanged(const QString&)), SLOT(onPushFromPathToSender(const QString&)));
+
 	QObject::connect(refresh_, SIGNAL(clicked()), this, SLOT(onRefreshClicked()));
 	QObject::connect(CopyToSelected, SIGNAL(clicked()), this, SLOT(onSendClicked()));
 
@@ -78,9 +95,33 @@ void IPSelectionWidget::createConnections()
 }
 
 
+void IPSelectionWidget::onPushBaseIp(const QString& ip, int number)
+{
+	switch (number)
+	{
+	case 1:
+	{
+		baseIp.push_front(ip);
+	}
+	case 2:
+	{
+		//	auto it = qFind(baseIp.begin(), baseIp.end(), ".");
+		auto index = baseIp.indexOf(".");
+		baseIp.insert(index, ip);
+		break;
+	}
+	case 3:
+	{
+		baseIp.push_back(ip);
+	}
+
+	}
+}
+
 void IPSelectionWidget::onRefreshClicked()
 {
-	ipController_->refreshActiveIPsOnLan();
+	if (!baseIp.isEmpty())
+	ipController_->refreshActiveIPsOnLan(baseIp);
 }
 void IPSelectionWidget::onSendClicked()
 {
