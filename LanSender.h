@@ -1,7 +1,7 @@
 #pragma once
 #include <QObject>
 #include <QWaitCondition>
-#include <QVector>
+#include <QSet>
 #include <QMap>
 #include <QPair>
 #include <QString>
@@ -17,7 +17,7 @@ public:
 	void onSendDataToXcopy(void);
 private:
 	QMap<int, QPair<QString, QString>> pairsOfPaths; //first - from second - to
-	QVector<QString> ips;
+	QSet<QString> ips;
 private slots:
 
 

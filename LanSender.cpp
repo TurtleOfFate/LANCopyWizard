@@ -8,7 +8,7 @@ LanSender::LanSender(QObject* parent) : QObject(parent)
 
 void LanSender::PushIpToSend(QString ip_)
 {
-	ips.push_back(ip_);
+	ips.insert(ip_);
 }
 
 void LanSender::PushFromPathToSend(QString pathFrom, int rowNumber)
@@ -22,7 +22,7 @@ void LanSender::PushToPathToSend(QString pathTo, int rowNumber)
 	pairsOfPaths[rowNumber].second = pathTo;
 }
 
-void LanSender::onSendDataToXcopy(void)
+void LanSender::onSendDataToXcopy()
 {
 	foreach (auto paths, pairsOfPaths)
 	{

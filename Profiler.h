@@ -38,21 +38,20 @@ public:
 
 	ProfileTime getElapsedTimeInAutoUnits(float timeInNano)
 	{
-		auto timeInSec = timeInNano / 1'000'000'000.f;
+		float timeInSec = timeInNano / 1'000'000'000.f;
 		if (timeInSec > 1.f)
 			return { "[s]", timeInSec };
 
-		auto timeInMili = timeInNano / 1'000'000.f;
+		float timeInMili = timeInNano / 1'000'000.f;
 		if (timeInMili > 1.f)
 			return { "[ms]", timeInMili };
 
-		auto timeInMicro = timeInNano / 1000.f;
+		float timeInMicro = timeInNano / 1000.f;
 		if (timeInMicro > 1.f)
 			return { "[us]", timeInMicro };
 
 		return { "[ns]", timeInNano };
 	}
-
 
 	void Stop()
 	{

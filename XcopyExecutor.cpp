@@ -11,9 +11,10 @@ XcopyExecutor::XcopyExecutor(QString& ip, QPair<QString, QString>& pathPair, QOb
 
 void XcopyExecutor::parsePathToValidForm()
 {
-	pairOfPath.first.replace('/', '\\');
-	pairOfPath.second.replace('/', '\\');
-	pairOfPath.second.replace(':', '\\');
+	pairOfPath.first.replace(QChar('/'), QChar('\\'), Qt::CaseInsensitive);
+	pairOfPath.second.replace(QChar('/'), QChar('\\'), Qt::CaseInsensitive);
+	pairOfPath.second.remove(QChar(':'), Qt::CaseInsensitive);
+	//pairOfPath.second.replace()
 	auto firstDiskToLower = pairOfPath.first.front().toLower();
 	auto secondDiskToLower = pairOfPath.second.front().toLower();
 	pairOfPath.first[0] = firstDiskToLower;
@@ -22,28 +23,35 @@ void XcopyExecutor::parsePathToValidForm()
 
 void XcopyExecutor::xcopy()
 {
-bool isFile = false;
-QStringList arguments;
-QString program;
-QString::iterator it;
+	bool isFile = false;
+	QStringList arguments;
+	QString program;
+	QString::iterator it;
 
 
-	if (pairOfPath.first.end() != qFind(pairOfPath.first.begin(), pairOfPath.first.end(), "."))
+	if (pairOfPath.second.end() != qFind(pairOfPath.second.begin(), pairOfPath.second.end(), "."))
 	{
 		isFile = true;
 	}
-connect(process_, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(onXCopyEnded()));
+
+	connect(process_, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(onXCopyEnded()));
+	connect(process_, SIGNAL(errorOccurred(QProcess::ProcessError)), this, SLOT(onXCopyFailed(QProcess::ProcessError)));
+	//R"(\\)""192.9.206.59\\c\\Soft"
+	QString pathTo = R"(\\)" + ip + "\\" + pairOfPath.second;
 	if (isFile)
 	{
-		arguments = QStringList() << pairOfPath.first << " " << R"(\\)" << ip << "\\" << pairOfPath.second << "/y";
+		arguments = QStringList() << pairOfPath.first << pathTo << "/y";
 		program = "xcopy";
 	}
 	else
 	{
-		arguments = QStringList() << pairOfPath.first << " " << R"(\\)" << ip << "\\" << pairOfPath.second << "/y /s /e";
-		program = "call echo d | xcopy";
+		arguments = QStringList() << pairOfPath.first << pathTo << "/y" << "/i";// /s /e";// ;
+		program = "xcopy";
 	}
-process_->start(program, arguments);//QStringList() << "-n" << "1" << ip_
+	//arguments = QStringList() << "f:\\HOHO.txt" << R"(\\)""192.9.206.151\\c\\Soft" << "/y";
+	//process_->
+	process_->start(program, arguments);//QStringList() << "-n" << "1" << ip_
+	QByteArray output = process_->readAllStandardOutput();
 }
 
 void XcopyExecutor::onXCopyEnded()
@@ -52,14 +60,21 @@ void XcopyExecutor::onXCopyEnded()
 	auto out = QString(output);
 	if (!output.isEmpty())
 	{
-		if (-1 != out.indexOf("ttl", 0, Qt::CaseInsensitive))
-		{
-			emit xcopySucceded(out);
-		}
-		else
-		{
-			emit xcopyFailed(out);
-		}
+		qDebug() << out;
+		emit xcopySucceded(out);
+	}
+	emit finished(out);
+}
+
+void XcopyExecutor::onXCopyFailed(QProcess::ProcessError error)
+{
+	qDebug() << "error enum val = " << error << endl;
+	QByteArray output = process_->readAllStandardError();
+	auto out = QString(output);
+	if (!output.isEmpty())
+	{
+		qDebug() << out;
+		emit xcopyFailed(out);
 	}
 	emit finished(out);
 }

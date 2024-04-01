@@ -15,10 +15,13 @@ private:
     QString ip;
     QProcess* process_;
 
-    void parsePathToValidForm(void);
+    void parsePathToValidForm();
+
 private slots:
-    void xcopy(void);
+    void xcopy();
     void onXCopyEnded();
+
+    void onXCopyFailed(QProcess::ProcessError error);
 
 signals:
 
