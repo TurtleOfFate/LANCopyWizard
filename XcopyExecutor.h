@@ -14,12 +14,15 @@ private:
     QPair<QString, QString> pairOfPath;
     QString ip;
     QProcess* process_;
+    QProcess* process2_;
 
     void parsePathToValidForm();
 
 private slots:
     void xcopy();
     void onXCopyEnded();
+
+    void onReadFromProcessOutput();
 
     void onXCopyFailed(QProcess::ProcessError error);
 
