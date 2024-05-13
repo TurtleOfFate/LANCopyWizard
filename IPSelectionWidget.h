@@ -23,6 +23,7 @@ private:
 private:
 	QListWidget *ipList_;
 	QPushButton *refresh_;
+	QPushButton *submit_base_ip;
 	QPushButton *CopyToSelected;
 	QVBoxLayout *parentLayout_;
 
@@ -30,7 +31,7 @@ private:
 	QLineEdit *firstBaseIp;
 	QLineEdit *secondBaseIp;
 	QLineEdit *thirdBaseIp;
-	QString baseIp = "..";
+	QString baseIp = "192.9.206.";
 
 	void toggleCheckState(QListWidgetItem* item);
 	QSet<QListWidgetItem*> previousSelectedItems_;
@@ -40,7 +41,7 @@ private:
 	LanSender* sender;
 private slots:
 
-	void onPushBaseIp(const QString& ip, int number);
+	void onPushBaseIp();
 
 	void onRefreshClicked();
 

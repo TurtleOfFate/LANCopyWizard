@@ -5,11 +5,13 @@
 #include <QMap>
 #include <QPair>
 #include <QString>
-class LanSender : public QObject
+#include <QWidget>
+#include <QMessageBox>
+class LanSender : public QWidget
 {
 	Q_OBJECT
 public:
-	LanSender(QObject* parent = nullptr);
+	LanSender(QWidget* parent = nullptr);
 
 	void PushIpToSend(QString ip_);
 	void PushToPathToSend(QString pathTo, int rowNumber);
@@ -18,8 +20,11 @@ public:
 private:
 	QMap<int, QPair<QString, QString>> pairsOfPaths; //first - from second - to
 	QSet<QString> ips;
+	QWidget* errorWidget;
+	QTextLine* errorText;
 private slots:
 
-
+	void ErrorWhileXcopy();
+	void SuccededWhileXcopy();
 };
 

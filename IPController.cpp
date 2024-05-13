@@ -30,7 +30,7 @@ void IPController::refreshActiveIPsOnLan(const QString& baseIP)
 	QString baseNetowrk = "192.9.206.";
 	for (int i = 0; i < hostsCount_; i++)
 	{
-		QString currIp(baseNetowrk + QString::number(i));
+		QString currIp(baseIP + QString::number(i));
 		PingExecutor* pingExecutor = new PingExecutor(currIp);
 		QThread* thread = new QThread;
 		pingExecutor->moveToThread(thread);

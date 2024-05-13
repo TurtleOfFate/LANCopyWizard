@@ -88,8 +88,13 @@ void PathRowWidget::onChooseFileFinished(int result)
 	if (files.empty())
 		return;
 	QString chosenPath = files[0];
+	QString additionalTooltip;
+	if (chosenPath.end() == qFind(chosenPath.begin(), chosenPath.end(), "."))
+	{
+		additionalTooltip = "  Files will copy inside target folder, without creating source folder";
+	}
 	currentEditPath_->setText(chosenPath);
-	currentEditPath_->setToolTip(chosenPath);
+	currentEditPath_->setToolTip(chosenPath + additionalTooltip);
 }
 
 void PathRowWidget::onPushFromPathToSender(const QString& from)

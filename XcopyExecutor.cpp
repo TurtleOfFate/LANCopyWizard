@@ -24,7 +24,8 @@ void XcopyExecutor::parsePathToValidForm()
 
 void XcopyExecutor::xcopy()
 {
-	bool isFile = false;
+	bool isToFile = false;
+	bool isFromFile = false;
 	QStringList arguments;
 	QString program;
 	QString::iterator it;
@@ -34,7 +35,11 @@ void XcopyExecutor::xcopy()
 
 	if (pairOfPath.second.end() != qFind(pairOfPath.second.begin(), pairOfPath.second.end(), "."))
 	{
-		isFile = true;
+		isToFile = true;
+	}
+	if (pairOfPath.first.end() != qFind(pairOfPath.first.begin(), pairOfPath.first.end(), "."))
+	{
+		isFromFile = true;
 	}
 
 	//connect(process_, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(onXCopyEnded()));
@@ -44,23 +49,32 @@ void XcopyExecutor::xcopy()
 	connect(process2_, SIGNAL(errorOccurred(QProcess::ProcessError)), this, SLOT(onXCopyFailed(QProcess::ProcessError)));
 
 	connect(process2_, SIGNAL(readyReadStandardOutput()), this, SLOT(onReadFromProcessOutput()));
+	connect(process2_, SIGNAL(readyReadStandardError()), this, SLOT(onReadFromProcessErrorOutput()));
 
 	//R"(\\)""192.9.206.59\\c\\Soft"
 	QString pathTo = R"(\\)" + ip + "\\" + pairOfPath.second;
-	if (isFile)
+	if (isToFile)
 	{
 		arguments = QStringList() << pairOfPath.first << pathTo << "/y";
 		program = "xcopy";
 		process2_->start(program, arguments);
 		//process2_->write("F\n"); // write our answer to the process
 	}
+	else if (isFromFile)
+	{
+		arguments = QStringList() << pairOfPath.first << pathTo << "/y" << "/i";// /s /e";// ;
+		program = "xcopy";
+		process2_->start(program, arguments);
+		process2_->write("D\n"); // write our answer to the process
+	}
 	else
 	{
 
-		arguments = QStringList() << pairOfPath.first << pathTo << "/y" << "/i";// /s /e";// ;
+		arguments = QStringList() << pairOfPath.first << pathTo << "/y" << "/s" << "/e";// /s /e";// ;
 		program = "xcopy";
-		process2_->start(program, arguments);	
+		process2_->start(program, arguments);
 		process2_->write("D\n"); // write our answer to the process
+
 	}
 
 	//arguments = QStringList() << "f:\\HOHO.txt" << R"(\\)""192.9.206.151\\c\\Soft" << "/y";
@@ -90,49 +104,85 @@ void XcopyExecutor::xcopy()
 
 void XcopyExecutor::onXCopyEnded()
 {
-	QByteArray output = process_->readAllStandardOutput();
-	auto out = QString(output);
-	if (!output.isEmpty())
-	{
-		qDebug() << out;
-		emit xcopySucceded(out);
-	}
+	//QByteArray output = process2_->readAllStandardOutput();
+	//QByteArray error = process2_->readAllStandardError();
+	//if (!output.isEmpty())
+	//{
+	//	out = QString(output);
+	//	qDebug() << out;
+	//	emit xcopySucceded(out);
+	//}
+	//if (!error.isEmpty())
+	//{
+	//	out = QString(error);
+	//	qDebug() << out;
+	//	emit xcopyFailed(out);
+	//}
 	emit finished(out);
+}
+
+void XcopyExecutor::onReadFromProcessErrorOutput()
+{
+	error = process2_->readAllStandardError();
+	if (!error.isEmpty())
+	{
+		out = QString(error);
+		qDebug() << out;
+		emit xcopyFailed();
+	}
 }
 
 void XcopyExecutor::onReadFromProcessOutput()
 {
-	//static int countOfReadEnter = 0;
-	//QString output = process2_->readAllStandardOutput().simplified();
-	//if (countOfReadEnter == 0)
-	//{
-	//	qDebug().noquote() << "output: " << output << endl;
-	//	if (output.contains(")?", Qt::CaseInsensitive))
-	//	{
-	//		process2_->write("D\n"); // write our answer to the process
-	//		process2_->write("doskey / history\n");
-	//	}
-	//	else
-	//	{
-	//		process2_->write("doskey / history\n");
-	//	}
-	//	countOfReadEnter++;
-	//}
-	//else 
-	//{
-	//	qDebug().noquote() << "output after doskey: " << output.toUtf8();
-	//}
+
+	QByteArray output = process2_->readAllStandardOutput();
+	if (!output.isEmpty() && error.isEmpty())
+	{
+
+		out = QString(output);
+		qDebug() << out;
+		emit xcopySucceded();
+	}
 }
 
 void XcopyExecutor::onXCopyFailed(QProcess::ProcessError error)
 {
 	qDebug() << "error enum val = " << error << endl;
-	QByteArray output = process_->readAllStandardError();
-	auto out = QString(output);
+	QByteArray output = process2_->readAllStandardError();
+	out = QString(output);
 	if (!output.isEmpty())
 	{
 		qDebug() << out;
-		emit xcopyFailed(out);
+		emit xcopyFailed();
 	}
 	emit finished(out);
 }
+
+
+
+
+
+//
+//void XcopyExecutor::onReadFromProcessOutput()
+//{
+//	static int countOfReadEnter = 0;
+//	QString output = process2_->readAllStandardOutput().simplified();
+//	if (countOfReadEnter == 0)
+//	{
+//		qDebug().noquote() << "output: " << output << endl;
+//		if (output.contains(")?", Qt::CaseInsensitive))
+//		{
+//			process2_->write("D\n"); // write our answer to the process
+//			process2_->write("doskey / history\n");
+//		}
+//		else
+//		{
+//			process2_->write("doskey / history\n");
+//		}
+//		countOfReadEnter++;
+//	}
+//	else 
+//	{
+//		qDebug().noquote() << "output after doskey: " << output.toUtf8();
+//	}
+//}

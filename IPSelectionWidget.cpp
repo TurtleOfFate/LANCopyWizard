@@ -25,10 +25,12 @@ IPSelectionWidget::IPSelectionWidget(LanSender* sender,IPController* controller,
 	firstBaseIp = new QLineEdit(this);
 	secondBaseIp = new QLineEdit(this);
 	thirdBaseIp = new QLineEdit(this);
+	submit_base_ip = new QPushButton("submit", this);
 
 	baseIpLayout_->addWidget(firstBaseIp);
 	baseIpLayout_->addWidget(secondBaseIp);
 	baseIpLayout_->addWidget(thirdBaseIp);
+	baseIpLayout_->addWidget(submit_base_ip);
 	baseIpWidget->setLayout(baseIpLayout_);
 
 	parentLayout_ = new QVBoxLayout(this);
@@ -79,8 +81,7 @@ void IPSelectionWidget::removeAddress(const QString& ip)
 void IPSelectionWidget::createConnections()
 {
 	//connect(firstBaseIp, &QLineEdit::textChanged, this, std::bind(&IPSelectionWidget::onPushBaseIp, this, 1));
-	connect(secondBaseIp, SIGNAL(textChanged(const QString&)), SLOT(onPushFromPathToSender(const QString&)));
-	connect(thirdBaseIp, SIGNAL(textChanged(const QString&)), SLOT(onPushFromPathToSender(const QString&)));
+	connect(submit_base_ip, SIGNAL(clicked()), SLOT(onPushBaseIp()));
 
 	QObject::connect(refresh_, SIGNAL(clicked()), this, SLOT(onRefreshClicked()));
 	QObject::connect(CopyToSelected, SIGNAL(clicked()), this, SLOT(onSendClicked()));
@@ -95,27 +96,17 @@ void IPSelectionWidget::createConnections()
 }
 
 
-void IPSelectionWidget::onPushBaseIp(const QString& ip, int number)
+void IPSelectionWidget::onPushBaseIp()
 {
-	switch (number)
-	{
-	case 1:
-	{
-		baseIp.push_front(ip);
-	}
-	case 2:
-	{
-		//	auto it = qFind(baseIp.begin(), baseIp.end(), ".");
-		auto index = baseIp.indexOf(".");
-		baseIp.insert(index, ip);
-		break;
-	}
-	case 3:
-	{
-		baseIp.push_back(ip);
-	}
 
-	}
+		baseIp.clear();
+		baseIp.push_back(firstBaseIp->text());
+		baseIp.push_back(".");
+		baseIp.push_back(secondBaseIp->text());
+		baseIp.push_back(".");
+		baseIp.push_back(thirdBaseIp->text());
+		baseIp.push_back(".");
+
 }
 
 void IPSelectionWidget::onRefreshClicked()
